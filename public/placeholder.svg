@@ -1,0 +1,27 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#317039;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F1BE49;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FBEDD9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#grad1)"/>
+  
+  <!-- Abstract nature elements -->
+  <circle cx="150" cy="100" r="40" fill="#317039" fill-opacity="0.3"/>
+  <circle cx="650" cy="200" r="60" fill="#F1BE49" fill-opacity="0.2"/>
+  <circle cx="400" cy="450" r="80" fill="#317039" fill-opacity="0.1"/>
+  
+  <!-- Leaf-like shapes -->
+  <path d="M200 300 Q250 250 300 300 Q250 350 200 300" fill="#317039" fill-opacity="0.4"/>
+  <path d="M500 150 Q550 100 600 150 Q550 200 500 150" fill="#F1BE49" fill-opacity="0.3"/>
+  
+  <!-- Text overlay -->
+  <text x="400" y="320" text-anchor="middle" fill="#317039" font-family="system-ui" font-size="36" font-weight="bold">
+    Rooted Platform
+  </text>
+  <text x="400" y="360" text-anchor="middle" fill="#317039" font-family="system-ui" font-size="18">
+    Community Wellness • Growth • Connection
+  </text>
+</svg> 
