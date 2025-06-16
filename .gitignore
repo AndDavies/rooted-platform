@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 docs/ # add rule once
 docs/ # add rule once
+docs/
