@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import type { TablesInsert, TablesUpdate } from '@/types/supabase'
 
 export async function createEvent(formData: FormData) {
   const supabase = await createClient()
@@ -24,17 +23,17 @@ export async function createEvent(formData: FormData) {
     redirect('/dashboard')
   }
 
-  const payload: TablesInsert<'events'> = {
+  const payload = {
     title: formData.get('title') as string,
     description: (formData.get('description') as string) || null,
-    type: formData.get('type') as any, // enum string
+    type: formData.get('type') as string,
     start_time: formData.get('start_time') as string,
     end_time: (formData.get('end_time') as string) || null,
     timezone: (formData.get('timezone') as string) || null,
     location: (formData.get('location') as string) || null,
     virtual_link: (formData.get('virtual_link') as string) || null,
     capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
-    access: formData.get('access') as any,
+    access: formData.get('access') as string,
     status: 'published',
     banner_image_url: (formData.get('banner_image_url') as string) || null,
     metadata: null,
@@ -74,22 +73,22 @@ export async function updateEvent(id: string, formData: FormData) {
     redirect('/dashboard')
   }
 
-  const payload: TablesUpdate<'events'> = {
+  const payload = {
     title: formData.get('title') as string,
     description: (formData.get('description') as string) || null,
-    type: formData.get('type') as any,
+    type: formData.get('type') as string,
     start_time: formData.get('start_time') as string,
     end_time: (formData.get('end_time') as string) || null,
     timezone: (formData.get('timezone') as string) || null,
     location: (formData.get('location') as string) || null,
     virtual_link: (formData.get('virtual_link') as string) || null,
     capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
-    access: formData.get('access') as any,
-    status: formData.get('status') as any,
+    access: formData.get('access') as string,
+    status: formData.get('status') as string,
     banner_image_url: (formData.get('banner_image_url') as string) || null,
     external_booking_url: (formData.get('external_booking_url') as string) || null,
     host: formData.get('host') as string | null,
-    details: formData.get('details') ? { description: formData.get('details') } : null,
+    details: formData.get('details') ? { description: formData.get('details') as string } : null,
   }
 
   const { error } = await supabase.from('events').update(payload).eq('id', id)

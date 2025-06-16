@@ -22,8 +22,9 @@ export default async function CommunitiesBrowsePage() {
       <h1 className="text-2xl font-bold">Communities</h1>
       <ul className="space-y-4">
         {(communities ?? []).map((c) => {
-          const isMember = (c as any).community_members?.length > 0
-          const role = isMember ? (c as any).community_members[0].role : null
+          const memberList = (c as { community_members?: { role: string }[] }).community_members ?? []
+          const isMember = memberList.length > 0
+          const role = isMember ? memberList[0].role : null
           return (
             <li key={c.id} className="flex items-center justify-between border p-4 rounded-md">
               <span>{c.name}</span>
