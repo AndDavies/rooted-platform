@@ -34,3 +34,35 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Events & Registrations Workflow
+
+### Creating Events (Admin)
+1. Sign in as an `admin` user.
+2. Navigate to `/admin/events`.
+3. Fill in the event form (title, description, start/end, capacity, access, etc.) and click **Create Event**.
+4. The event is created with `status = draft` by default; switch to **Published** when ready so members can see it.
+
+### Member / Public View
+- Published events automatically appear at `/events`.
+- Visibility is controlled by the event's **access** field and Row-Level-Security (RLS):
+  - `public` – visible to everyone.
+  - `private` / `premium` – visible only to authenticated users who belong to the same community or to admins.
+
+### Registering for an Event
+1. Visit `/events` and click **RSVP** next to an event.
+2. A row is inserted into `event_registrations`.
+   - If the event has **no capacity** set, registration is always **confirmed**.
+   - If **capacity** is set, a DB trigger checks how many **confirmed** rows exist.
+     - If capacity is full, the new registration is saved with `status = waitlisted`.
+3. The button changes to **Cancel RSVP** (or **Leave wait-list** when applicable).
+
+### Canceling / Leaving the Wait-list
+- Click **Cancel RSVP** (or **Leave wait-list**) to delete your row.
+- If a confirmed attendee cancels and a wait-listed row exists, an **admin** can promote wait-listed users manually (future enhancement).
+
+### Admin Managing Registrations
+- A dedicated drawer `/admin/events/[id]/registrations` (coming soon) will list **confirmed** and **wait-listed** users with promote/remove controls.
+
+---
+Generated automatically – see `docs/events-flow.md` for the canonical diagram.

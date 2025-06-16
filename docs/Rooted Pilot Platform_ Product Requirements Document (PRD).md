@@ -1,285 +1,558 @@
-# **Rooted Pilot Platform: Product Requirements Document (PRD)**
+# **Product Requirements Document (PRD): The ROOTED Way Platform**
 
-## **1\. Project Overview**
+## **1\. Product Overview**
 
-### **1.1 Objective**
+### **1.1 Purpose**
 
-Develop a scalable, production-ready community platform for Rooted™, delivering personalized, modular insights across six pillars (Breathing, Sleep Optimization, Nutrition, Movement and Training, Mindset and Focus, Relaxation and Joy) to enhance metabolic reset, sleep, movement, joy, and leadership. The MVP supports 2–3 day micro-retreats (July 2025\) for 10–20 participants, with subscription access for non-retreat users ($10/month, assumed) to offset hosting costs. Insights include supplement and nutrition suggestions, leveraging direct wearable APIs (Garmin, Apple Health) for a broader community (retreats, micro-events, mobile events).
+The ROOTED Way is a tailored digital platform to foster community, engagement, and personal growth for Rooted™ members, aligning with the mission to redefine modern leadership through wellness, connection, and embodied practices. It serves as a hub for community interaction, event planning (details and schedules, not bookings), content delivery, and personalized wellness insights. The platform integrates wearable data, provides AI-driven recommendations, and enables feedback loops for facilitators. Authentication is implemented using Supabase's Server-Side Rendering (SSR) library (@supabase/ssr), not Auth.js, with a trigger to create an entry in a public users table upon user signup, secured by Row-Level Security (RLS) policies.
 
-### **1.2 Scope**
+### **1.2 Target Audience**
 
-* **MVP**: Supports 20 users (10–20 micro-retreat participants, initial subscribers) with Garmin Health API and Apple Health (HealthKit) data, targeting July 2025 micro-retreats. Expandable to Android Health Connect, Whoop, Fitbit. No 6–7 day retreats or mobile events for MVP.  
-* **Features**: Supabase authentication (supabase-ssr), onboarding, wearable integration, modular insights with supplements/nutrition, HRV/sleep charts, dynamic content (retreat schedules, tips), discussion board, in-app feedback, coach feedback.  
-* **Out of Scope**: Payment processing, CGM integration, advanced Tribe features (e.g., event RSVPs, messaging), multi-language support, HIPAA compliance.
+* **Community Members**: Individuals in the Rooted™ community, including retreat attendees and online participants, seeking connection, wellness resources, and leadership growth.  
+* **Facilitators**: Rooted™ coaches and practitioners who guide members and monitor progress.  
+* **Admins**: Rooted™ team members managing the platform, content, and settings.
 
-### **1.3 Success Metrics**
+### **1.3 Key Features**
 
-* **Technical**: 95% data sync success (wearables → Supabase → xAI → dashboard).  
-* **User Engagement**: 80% of users view insights, post in discussion board, or submit feedback.  
-* **Outcomes**: Positive feedback on sleep, leadership, and nutrition insights (per 97% clarity ROI, 34% fatigue, “Survey Analysis”).  
-* **Business**: Team approval (Ash, Andrew, Zeger) for pilot expansion by July 2025, with 50–100 users by year-end.
+1. **Community Platform for Events and Engagement**:  
+   * Spaces for discussions, polls, and real-time chat.  
+   * Event planning (e.g., Madeira retreat schedules) with RSVP tracking.  
+   * Dynamic activity feed for updates.  
+2. **Wearable Data Integration**:  
+   * Sync with wearables (e.g., Oura Ring, Whoop) for HRV, sleep, and activity.  
+   * Secure storage in Supabase.  
+3. **Personalized Insights Supported by AI**:  
+   * AI recommendations based on biometrics, surveys, and engagement.  
+   * Tailored wellness and leadership plans.  
+4. **Feedback Loop to Rooted Way Facilitators**:  
+   * Member progress reports and coaching tools.  
+   * Real-time feedback submission.  
+5. **Supabase Authentication with SSR (Not Auth.js)**:  
+   * SSR-based authentication with email, Google, and Apple login using @supabase/ssr.  
+   * Trigger to create public.users\_public entry on user signup.  
+   * RLS policies for secure data access.  
+6. **Data Storage and Feedback in Supabase**:  
+   * Centralized storage for user data, biometrics, and feedback.  
+   * Public users\_public table for member metadata.  
+7. **Event and Content Delivery**:  
+   * Content library for videos, articles, and meditations.  
+   * Event schedules with Zoom integration.  
+8. **Security and Privacy**:  
+   * GDPR/CCPA compliance.  
+   * End-to-end encryption for sensitive data.  
+   * Secure RLS policies.
 
-## **2\. User Personas**
+## **2\. Functional Requirements**
 
-* **Participants**:  
-  * **Profile**: High-performing leaders (“High-Velocity Expert,” 41–50, $300–800k income, per “Survey Analysis”).  
-  * **Needs**: Deep, pillar-specific insights, community engagement, biometric tracking.  
-  * **Access**: View dashboard, insights, charts, content; post in discussion board; submit feedback. Authenticated via Supabase (supabase-ssr).  
-* **Coaches** (e.g., Ash, Andrew, Zeger):  
-  * **Needs**: Monitor participant biometrics/insights, provide feedback.  
-  * **Access**: View participant data, add private comments. Supabase auth with coach role.  
-* **Admins**:  
-  * **Needs**: Manage content, troubleshoot data.  
-  * **Access**: Full Supabase/Next.js admin panel. Supabase auth with admin role.
+### **2.1 User Roles and Permissions**
 
-## **3\. Functional Requirements**
-
-### **3.1 Authentication**
-
-* **Description**: Secure user access using Supabase Authentication with supabase-ssr.  
-* **Details**:  
-  * **Supabase API**:  
-    * **URL**: https://bwlahjirjvlfxxiicfnj.supabase.co  
-    * **Anon Public Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bGFoamlyanZsZnh4aWljZm5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2MTg1NTUsImV4cCI6MjA2NDE5NDU1NX0.SfURGItaGHNdWsv6QqVBRZxgQFeUGssnH5tyrZbM8wc  
-    * **Service Role Key**: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3bGFoamlyanZsZnh4aWljZm5qIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODYxODU1NSwiZXhwIjoyMDY0MTk0NTU1fQ.d6TVVanboag-nStj4ZO5pm8D-9E5ROJsgpddrMtuXjo  
-  * **Methods**: Email/password, OAuth (Google, Apple) for participants, coaches, admins.  
-  * **Roles**: Participant (view/post), Coach (view/comment), Admin (full access).  
-  * **Implementation**: supabase-ssr for server-side auth in Next.js (per supabase.com/docs/guides/auth/server-side/nextjs).  
-  * **Storage**: User data in Supabase auth.users table, linked to users table.  
-* **User Story**: As a user, I want to log in securely so I can access my dashboard.
-
-### **3.2 Onboarding**
-
-* **Description**: Participants create profiles and connect wearables.  
-* **Details**:  
-  * Form fields: email, password (Supabase auth), name, age, gender, stress level, energy level, mood (daily sliders, 1–10 scale, per “Daily”).  
-  * Wearable connection via Garmin OAuth 2.0 and Apple Health (HealthKit) permissions (react-native-health).  
-  * Stored in Supabase users table (user\_id, profile\_json, wearable\_id).  
-  * No manual biometric entry for MVP.  
-* **User Story**: As a participant, I want to input my profile and connect my wearable to receive insights.
-
-### **3.3 Wearable Integration**
-
-* **Description**: Fetch biometric data from Garmin and Apple Health, expandable to Android Health Connect, Whoop, Fitbit.  
-* **Details**:  
-  * **APIs**:  
-    * **Garmin Health API** (free, OAuth 2.0): HRV, RHR, sleep (stages, duration), steps, workouts, stress, calories (per developer.garmin.com).  
-    * **Apple Health (HealthKit, $8/month)**: HRV, RHR, sleep, steps, workouts, active energy (via react-native-health).  
-  * **Data**: Daily sync (webhooks for Garmin, polling for HealthKit).  
-  * **Storage**: Supabase biometrics table (user\_id, timestamp, metric\_type, value).  
-  * **Modularity**: WearableClient interface in Next.js (e.g., GarminClient, HealthKitClient) for extensible API integration.  
-  * **Wearables**: Garmin, Apple Health for MVP; Android Health Connect, Whoop, Fitbit post-MVP.  
-* **User Story**: As a participant, I want my wearable data synced daily to track biometrics.
-
-### **3.4 Insights Generation**
-
-* **Description**: Deliver modular, pillar-specific insights with supplement/nutrition suggestions using xAI API.  
-* **Details**:  
-  * **Pillars and Insights** (initial set, extensible):  
-    * **Breathing**: “High stress (HRV 40); try 4-7-8 breathing, take ashwagandha 300mg” (HRV, stress).  
-    * **Sleep Optimization**: “Low REM (15% below norm); try 10 min yin yoga, take magnesium 200mg” (sleep stages, per 49% racing mind, “Survey Analysis”).  
-    * **Nutrition**: “High workout intensity; consume 30g protein shake, add omega-3 1g” (workouts, calories, per 34% fatigue).  
-    * **Movement and Training**: “High strain; switch to Tai-chi, take BCAA 5g post-workout” (workouts, HRV).  
-    * **Mindset and Focus**: “Poor sleep; meditate 10 min, take L-theanine 100mg for clarity” (sleep, HRV, per 97% clarity ROI).  
-    * **Relaxation and Joy**: “Elevated stress; join Tribe campfire, try lavender tea” (stress, HRV, per 46% emotional volatility).  
-  * **Modularity**: Insights as Node.js modules (e.g., BreathingInsight.js) in Next.js API routes (/api/insights/\[pillar\]), triggered by Zapier on new data.  
-  * **Inputs**: Wearable data (Supabase biometrics), subjective inputs (stress, energy, mood sliders, users table).  
-  * **Delivery**: Dashboard notifications, daily email (via Zapier/Mailchimp).  
-  * **Storage**: Supabase insights table (user\_id, pillar, text, timestamp).  
-* **User Story**: As a participant, I want deep insights with supplement/nutrition suggestions to optimize my wellness.
-
-### **3.5 Data Visualization**
-
-* **Description**: Display biometric trends for engagement.  
-* **Details**:  
-  * HRV and sleep duration charts (Chart.js, static for MVP).  
-  * Responsive (ShadCN components, mobile/desktop).  
-  * Data from Supabase biometrics.  
-* **User Story**: As a participant, I want to see HRV/sleep trends to track progress.
-
-### **3.6 Content Delivery**
-
-* **Description**: Serve dynamic retreat schedules and wellness tips.  
-* **Details**:  
-  * Dynamic content: Micro-retreat schedules (e.g., WHM breathing, HIIT, per “Madeira retreat”), wellness tips (e.g., breathwork, per “90-Day Habit Kit”).  
-  * Stored in Supabase content table (id, title, body, type: schedule/tip).  
-  * Displayed in dashboard (ShadCN cards, no hardcoding).  
-  * Admin upload via Next.js admin panel.  
-* **User Story**: As a participant, I want to access dynamic schedules and tips to follow Rooted’s program.
-
-### **3.7 Community and Coaching**
-
-* **Description**: Enable peer-to-peer engagement and coach feedback.  
-* **Details**:  
-  * **Discussion Board**: Threaded replies, likes (Supabase posts, comments tables).  
-  * **Coach Feedback**: Private comments on insights (Supabase feedback table, linked to insights).  
-  * **Access**: Participants post/view; coaches view biometrics/insights, add comments via dashboard.  
-* **User Story**: As a participant, I want to engage with peers and receive coach feedback.
-
-### **3.8 Feedback Collection**
-
-* **Description**: Collect user input to refine platform.  
-* **Details**:  
-  * In-app form: Rating (1–5), comments (post-session, per “Survey”).  
-  * Stored in Supabase feedback table.  
-* **User Story**: As a participant, I want to submit feedback to improve the platform.
-
-## **4\. Non-Functional Requirements**
-
-* **Performance**: Page load \< 2s (Vercel CDN, per). API calls \< 500ms (Supabase).  
-* **Scalability**: Handle 20 users for MVP, designed for 100+ (Supabase/Vercel Pro, $45/month post-MVP).  
-* **Security**:  
-  * Encrypt biometric/subjective data in Supabase (AES-256, per).  
-  * GDPR compliance (Madeira): Consent via onboarding form.  
-  * Supabase auth (supabase-ssr) with JWT, Garmin OAuth 2.0, HealthKit permissions.  
-* **Reliability**: 99.9% uptime (Vercel, Supabase, per).  
-* **UI/UX**:  
-  * Mobile/desktop support (React.js, responsive).  
-  * ShadCN components, OriginUI styling.  
-  * **Color Palette**:  
-    * Emerald Green: \#317039 (RGB: 49, 112, 57\)  
-    * Maximum Yellow: \#F1BE49 (RGB: 241, 190, 73\)  
-    * Antique White: \#FBEDD9 (RGB: 248, 237, 217\)  
-    * Dark Pastel Red: \#CC4824 (RGB: 204, 75, 36\)  
-    * Papaya Whip: \#FFF1D4 (RGB: 255, 241, 212\)  
-    * Cosmic Latte: \#FFF8EB (RGB: 255, 251, 235\)  
-* **Modularity**:  
-  * Wearable APIs via WearableClient interface (Next.js).  
-  * Insights as Node.js modules (/api/insights/\[pillar\]).  
-  * Dynamic content in Supabase, no hardcoding.  
-* **Development**: Node.js/Next.js prioritized over Python (e.g., insights in API routes, not Python scripts).
-
-## **5\. Technical Architecture**
-
-* **Frontend**: Next.js/React.js (Vercel, free tier), ShadCN components, OriginUI styling.  
-* **Backend**: Supabase (free tier, PostgreSQL) with tables:  
-  * auth.users: Supabase auth data.  
-  * users: Profile, subjective inputs (stress, energy, mood).  
-  * biometrics: Wearable data (HRV, sleep, etc.).  
-  * insights: xAI-generated insights.  
-  * content: Schedules, tips.  
-  * posts, comments: Discussion board.  
-  * feedback: User/coach feedback.  
-* **APIs**:  
-  * **Garmin Health API** (free, OAuth 2.0): /v1/health/dailies for HRV, sleep, activity.  
-  * **Apple Health (HealthKit, $8/month)**: HKQuantityType for HRV, sleep, workouts (react-native-health).  
-  * **xAI API** (\~$20/month): Insights via Next.js API routes.  
-* **Authentication**: Supabase (supabase-ssr) with email/password, Google/Apple OAuth.  
-* **Automation**: Zapier (free tier) triggers insights on new wearable data (webhooks for Garmin, polling for HealthKit).  
-* **Data Flow**: Wearable → API client → Supabase → xAI → Dashboard/Email.
-
-## **6\. User Stories**
-
-* **Participant**:  
-  * “I want to log in with Supabase auth to access my dashboard.”  
-  * “I want to connect Garmin/Apple Health for biometric tracking.”  
-  * “I want pillar-specific insights with supplement suggestions to optimize wellness.”  
-  * “I want to post in the discussion board to connect with peers.”  
-* **Coach**:  
-  * “I want to view participant biometrics/insights to provide private feedback.”  
+* **Member**:  
+  * Access spaces, events, content, and insights.  
+  * Sync wearables and submit feedback.  
+  * View public member directory (users\_public).  
+* **Facilitator**:  
+  * View member progress and biometrics (with RLS).  
+  * Provide coaching via messages/comments.  
+  * Moderate spaces.  
 * **Admin**:  
-  * “I want to upload dynamic content (schedules, tips) with no hardcoding.”
+  * Full back-office control panel.  
+  * Manage platform settings, content, and users.  
+  * Create, edit, and delete events (including agenda, Zoom link, and capacity).  
+  * Create and manage communities, spaces, and groups; assign or move members between them.  
+  * Bulk invite or import new members.  
+  * Access analytics and feedback logs.  
+  * Moderate or remove inappropriate content.
 
-## **7\. Prioritization**
+### **2.2 Core Modules**
 
-* **Must-Have** (MVP, July 2025):  
-  * Supabase auth (supabase-ssr), onboarding, Garmin/Apple Health integration, 6 modular insights (1 per pillar with supplements), HRV/sleep chart, dynamic content, discussion board, feedback form, coach view/comments.  
-* **Nice-to-Have** (Post-MVP):  
-  * Android Health Connect, Whoop, Fitbit integration.  
-  * Predictive insights (e.g., fatigue risk).  
-  * Stripe for subscriptions ($10/month).  
-  * Event RSVPs, direct messaging.
+#### **2.2.1 Community Platform for Events and Engagement**
 
-## **8\. Timeline and Milestones**
+* **Spaces**:  
+  * Custom spaces (e.g., "Rooted Tribe™," "Unleash Series") for discussions and polls.  
+  * Real-time chat via Supabase Realtime.  
+  * Public/private visibility.  
+* **Activity Feed**:  
+  * Aggregates posts, event announcements, and content.  
+  * Filterable by theme (e.g., "Release Series").  
+* **Event Planning**:  
+  * Admins create event pages (e.g., "Madeira Retreat Day 1: WHM Breathing").  
+  * Details include agenda, Zoom link, and RSVP tracking.  
+  * Redirect to external platform for bookings.  
+  * Post-event content (e.g., recordings) in library.
 
-* **Duration**: 4–6 weeks (June 2–July 11, 2025, flexible).  
-* **Week 1 (June 2–8)**:  
-  * Initialize Next.js (dev server), Vercel, Supabase.  
-  * Set up supabase-ssr auth (email, Google, Apple).  
-  * Configure Garmin OAuth 2.0, Apple Health (react-native-health).  
-* **Week 2 (June 9–15)**:  
-  * Integrate wearable APIs, sync data to Supabase.  
-  * Develop 6 modular insights (Node.js, /api/insights/\[pillar\]).  
-* **Week 3 (June 16–22)**:  
-  * Build dashboard (ShadCN, Chart.js), discussion board, feedback form.  
-  * Set up Zapier triggers, coach view.  
-* **Week 4 (June 23–29)**:  
-  * Test with your Garmin/Apple Health data (3–5 days).  
-  * Polish UI (OriginUI, palette), debug with Grok/Cursor.  
-* **Week 5–6 (June 30–July 11, optional)**:  
-  * Demo to team (Ash, Andrew, Zeger).  
-  * Prepare for July micro-retreats.
+#### **2.2.2 Wearable Data Integration**
 
-## **9\. Assumptions and Risks**
+* **Devices**: Oura Ring, Whoop, Fitbit, Apple Health.  
+* **Sync**: OAuth-based, daily or on-demand to Supabase Storage.  
+* **UI**: Dashboard with HRV, sleep, and activity trends.
 
-* **Assumptions**:  
-  * Garmin API access approved by June 5, 2025 (2 days, per developer.garmin.com).  
-  * Your Garmin/Apple Health data sufficient for MVP testing.  
-  * xAI API supports modular insights (\~$20/month).  
-  * Supabase/Vercel free tiers handle 20 users.  
-  * $10/month subscription offsets future costs (Vercel/Supabase Pro, $45/month).  
-* **Risks**:  
-  * **Garmin Approval Delay**: Mitigate with Apple Health focus.  
-  * **Zapier Limits**: Free tier (100 tasks) may restrict triggers; use Next.js API routes if needed.  
-  * **xAI Costs**: Unclear pricing; confirm at x.ai/api.  
-  * **Timeline Slippage**: Flexible 4–6 weeks; prioritize sleep/nutrition insights if delayed.
+#### **2.2.3 Personalized Insights Supported by AI**
 
-## **10\. Appendix**
+* **AI Model**: Rule-based or ML, hosted on Vercel Edge Functions.  
+* **Inputs**: Biometrics, survey responses (e.g., stress levels), engagement.  
+* **Outputs**: Suggestions (e.g., "Try breathwork for low HRV").  
+* **Delivery**: In-app notifications, dashboard, weekly emails.
 
-* **Color Palette**:  
-  * Emerald Green: \#317039 (RGB: 49, 112, 57\)  
-  * Maximum Yellow: \#F1BE49 (RGB: 241, 190, 73\)  
-  * Antique White: \#FBEDD9 (RGB: 248, 237, 217\)  
-  * Dark Pastel Red: \#CC4824 (RGB: 204, 75, 36\)  
-  * Papaya Whip: \#FFF1D4 (RGB: 255, 241, 212\)  
-  * Cosmic Latte: \#FFF8EB (RGB: 255, 251, 235\)  
-* **API Endpoints** (examples):  
-  * Garmin: /v1/health/dailies (HRV, sleep, activity).  
-  * Apple Health: HKQuantityType (HRV, sleep, workouts).  
-  * Supabase: https://bwlahjirjvlfxxiicfnj.supabase.co (auth, REST).  
-* **References**:  
-  * “Onepager Rooted”: Pillars, insights, outcomes (12% HRV rise).  
-  * “Survey Analysis”: Needs (49% racing mind, 34% fatigue, 46% emotional volatility).  
-  * “Madeira retreat”: Schedule (WHM breathing, HIIT).
+#### **2.2.4 Feedback Loop to Rooted Way Facilitators**
 
-rooted-platform/  
-├── app/  
-│   ├── api/  
-│   │   ├── insights/  
-│   │   │   ├── \[pillar\]/  
-│   │   │   │   └── route.ts        \# Modular insight routes (Node.js)  
-│   │   └── auth/  
-│   │       └── route.ts            \# Supabase auth endpoints  
-│   ├── dashboard/  
-│   │   ├── page.tsx                \# Main dashboard (insights, charts)  
-│   │   └── layout.tsx              \# Dashboard layout  
-│   ├── onboarding/  
-│   │   └── page.tsx                \# Onboarding form  
-│   ├── community/  
-│   │   └── page.tsx                \# Discussion board  
-│   ├── globals.css                 \# Tailwind/OriginUI styles  
-│   ├── layout.tsx                  \# Root layout (auth, nav)  
-│   └── page.tsx                    \# Home page  
-├── components/  
-│   ├── ui/                         \# ShadCN components (e.g., button, card)  
-│   ├── Dashboard.tsx               \# Dashboard component  
-│   ├── OnboardingForm.tsx          \# Onboarding form  
-│   ├── DiscussionBoard.tsx         \# Community board  
-│   └── InsightCard.tsx             \# Insight display  
-├── lib/  
-│   ├── supabase.ts                 \# Supabase client (supabase-ssr)  
-│   ├── wearableClient.ts           \# Wearable API interface (Garmin, Apple)  
-│   └── xaiClient.ts                \# xAI API client  
-├── types/  
-│   └── index.ts                    \# TypeScript types (user, biometrics)  
-├── utils/  
-│   └── constants.ts                \# Color palette, configs  
-├── public/  
-│   ├── favicon.ico  
-│   └── logo.png                    \# Rooted™ logo (add later)  
-├── package.json  
-├── tsconfig.json  
-├── tailwind.config.ts  
-├── next.config.mjs  
-└── .env.local                      \# Environment variables
+* **Member Feedback**: Forms for progress (e.g., energy, stress).  
+* **Facilitator Tools**: Dashboard with biometric summaries and messaging.  
+* **Alerts**: Notify facilitators of critical feedback (e.g., chronic fatigue).
+
+#### **2.2.5 Supabase Authentication with SSR (Not Auth.js)**
+
+* **Implementation**:  
+  * Use @supabase/ssr for Next.js App Router, not Auth.js.  
+  * Clients: Browser (createBrowserClient) and server (createServerClient).  
+  * Login: Email/password, Google, Apple OAuth, magic links.
+
+Environment variables:  
+NEXT\_PUBLIC\_SUPABASE\_URL=https://auqyngiwrzjwylzylxtb.supabase.co
+
+* NEXT\_PUBLIC\_SUPABASE\_ANON\_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1cXluZ2l3cnpqd3lsenlseHRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg3NzUzNTMsImV4cCI6MjA1NDM1MTM1M30.J7CENq7oxqazR2eM6ots5mfc-CITULKjmCDGHcWz\_fs  
+* **Middleware**:  
+  * Refreshes auth tokens using supabase.auth.getUser().  
+  * Stores tokens in cookies via request.cookies.set and response.cookies.set.  
+  * Excludes static routes (e.g., \_next/static).  
+* **Trigger**:  
+  * On auth.users insert, trigger creates entry in public.users\_public.  
+  * Fields: user\_id, username, joined\_at.  
+  * Secured by RLS for public read-only access.  
+* **RLS Policies**:  
+  * Restrict biometrics to owner or assigned facilitator.  
+  * Allow public read on users\_public for member directory.  
+* **Confirmation**:  
+  * Email confirmation links to /auth/confirm?token\_hash={{ .TokenHash }}\&type=email.  
+  * Route handler verifies OTP and redirects.
+
+#### **2.2.6 Data Storage and Feedback in Supabase**
+
+* **Storage**:  
+  * PostgreSQL: Users, events, feedback.  
+  * Storage: Biometrics (biometrics/:user\_id), content (content/:event\_id).  
+* **Public Table**:  
+  * users\_public for member directory (e.g., username, join date).  
+  * Populated via trigger on auth.users insert.  
+* **Feedback**:  
+  * Stored in feedback table with user\_id, facilitator\_id, content.  
+  * Real-time submission via forms.
+
+#### **2.2.7 Event and Content Delivery**
+
+* **Content Library**:  
+  * Videos, articles, PDFs (e.g., "Release Series" yoga).  
+  * Free/premium access tiers.  
+* **Event Delivery**:  
+  * Virtual events via Zoom links.  
+  * Retreat schedules (e.g., "Day 3: Kickboxing Workshop").  
+  * Offline content downloads.
+
+#### **2.2.8 Security and Privacy**
+
+* **Data Protection**:  
+  * End-to-end encryption for biometrics/chat.  
+  * Signed URLs for Storage.  
+* **Compliance**:  
+  * GDPR/CCPA (e.g., data deletion).  
+  * Consent for wearables.  
+* **RLS**:  
+  * biometrics: Readable by owner or facilitator.  
+  * users\_public: Readable by all authenticated users.
+
+### **2.3 Non-Functional Requirements**
+
+* **Performance**: Page loads \< 2s, chat latency \< 100ms.  
+* **Scalability**: 5,000 concurrent users.  
+* **Security**: OWASP Top 10 compliance, penetration testing.  
+* **Reliability**: 99.9% uptime, daily backups.  
+* **Accessibility**: WCAG 2.1 compliance.
+
+## **3\. Technical Architecture**
+
+### **3.1 Tech Stack**
+
+* **Frontend**: Next.js (App Router)  
+  * SSR/SSG for performance.  
+  * Vercel for deployment.  
+  * Tailwind CSS for styling.  
+* **Backend**: Supabase  
+  * PostgreSQL for data.  
+  * Realtime for chat/notifications.  
+  * Storage for biometrics/content.  
+  * Authentication via @supabase/ssr.  
+* **APIs**:  
+  * REST for CRUD.  
+  * WebSocket for real-time.  
+* **Integrations**:  
+  * Wearables (Oura, Whoop, Fitbit).  
+  * Zoom for events.  
+  * SendGrid for emails.  
+* **AI**: Vercel Edge Functions for recommendations.
+
+### **3.2 Database Schema**
+
+\-- Users public table (populated by trigger)  
+CREATE TABLE public.users\_public (  
+  user\_id UUID PRIMARY KEY REFERENCES auth.users(id),  
+  username TEXT NOT NULL,  
+  joined\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Trigger to populate users\_public  
+CREATE FUNCTION public.create\_public\_user()  
+RETURNS TRIGGER AS $$  
+BEGIN  
+  INSERT INTO public.users\_public (user\_id, username, joined\_at)  
+  VALUES (NEW.id, COALESCE(NEW.raw\_user\_meta\_data-\>\>'username', NEW.email), NOW())  
+  ON CONFLICT (user\_id) DO NOTHING;  
+  RETURN NEW;  
+END;  
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on\_user\_created  
+AFTER INSERT ON auth.users  
+FOR EACH ROW EXECUTE FUNCTION public.create\_public\_user();
+
+\-- Biometrics table  
+CREATE TABLE public.biometrics (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  user\_id UUID REFERENCES auth.users(id),  
+  data JSONB, \-- HRV, sleep, etc.  
+  source TEXT, \-- Oura, Whoop  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Feedback table  
+CREATE TABLE public.feedback (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  user\_id UUID REFERENCES auth.users(id),  
+  facilitator\_id UUID REFERENCES auth.users(id),  
+  content JSONB,  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Spaces table  
+CREATE TABLE public.spaces (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  community\_id UUID REFERENCES public.communities(id),  
+  name TEXT NOT NULL,  
+  visibility TEXT CHECK (visibility IN ('public', 'private')) DEFAULT 'public',  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Posts table  
+CREATE TABLE public.posts (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  space\_id UUID REFERENCES public.spaces(id),  
+  user\_id UUID REFERENCES auth.users(id),  
+  content JSONB, \-- Text, media  
+  type TEXT CHECK (type IN ('post', 'poll', 'article')) NOT NULL,  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Events table  
+CREATE TABLE public.events (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  community\_id UUID REFERENCES public.communities(id),  
+  title TEXT NOT NULL,  
+  start\_time TIMESTAMP NOT NULL,  
+  end\_time TIMESTAMP,  
+  details JSONB, \-- Agenda, Zoom link  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Content table  
+CREATE TABLE public.content (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  community\_id UUID REFERENCES public.communities(id),  
+  title TEXT NOT NULL,  
+  type TEXT CHECK (type IN ('video', 'article', 'pdf')) NOT NULL,  
+  url TEXT, \-- Supabase Storage path  
+  access TEXT CHECK (access IN ('free', 'premium')) DEFAULT 'free',  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- Communities table  
+CREATE TABLE public.communities (  
+  id UUID PRIMARY KEY DEFAULT uuid\_generate\_v4(),  
+  name TEXT NOT NULL DEFAULT 'Rooted Tribe',  
+  settings JSONB, \-- Branding, privacy  
+  created\_at TIMESTAMP DEFAULT NOW()  
+);
+
+\-- RLS policies  
+CREATE POLICY "Public read users\_public" ON public.users\_public  
+  FOR SELECT  
+  USING (true);
+
+CREATE POLICY "Facilitators view biometrics" ON public.biometrics  
+  FOR SELECT  
+  USING (  
+    EXISTS (  
+      SELECT 1  
+      FROM auth.users u  
+      WHERE u.id \= auth.uid()  
+      AND u.raw\_user\_meta\_data-\>\>'role' \= 'facilitator'  
+      AND biometrics.user\_id IN (  
+        SELECT id FROM auth.users WHERE raw\_user\_meta\_data-\>\>'assigned\_facilitator' \= u.id::text  
+      )  
+    )  
+  );
+
+CREATE POLICY "Owner view biometrics" ON public.biometrics  
+  FOR SELECT  
+  USING (auth.uid() \= user\_id);
+
+CREATE POLICY "Feedback access by owner" ON public.feedback  
+  FOR SELECT  
+  USING (auth.uid() \= user\_id OR auth.uid() \= facilitator\_id);
+
+### **3.3 API Endpoints**
+
+* **Auth**: /api/auth/login, /api/auth/confirm.  
+* **Users**: GET /api/users/:id, PUT /api/users/:id.  
+* **Biometrics**: POST /api/biometrics, GET /api/biometrics/:user\_id.  
+* **Feedback**: POST /api/feedback, GET /api/feedback/:user\_id.  
+* **Events**: POST /api/events, GET /api/events/:id.  
+* **Spaces**: POST /api/spaces, GET /api/spaces/:id/posts.  
+* **Posts**: POST /api/posts, POST /api/posts/:id/comments.  
+* **Content**: POST /api/content, GET /api/content/:id.
+
+### **3.4 Authentication Setup**
+
+* **Supabase SSR**:  
+  * Install: npm install @supabase/supabase-js @supabase/ssr.
+
+Env:  
+NEXT\_PUBLIC\_SUPABASE\_URL=https://auqyngiwrzjwylzylxtb.supabase.co
+
+* NEXT\_PUBLIC\_SUPABASE\_ANON\_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF1cXluZ2l3cnpqd3lsenlseHRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg3NzUzNTMsImV4cCI6MjA1NDM1MTM1M30.J7CENq7oxqazR2eM6ots5mfc-CITULKjmCDGHcWz\_fs
+
+Clients:  
+// utils/supabase/client.ts  
+import { createBrowserClient } from '@supabase/ssr';  
+export function createClient() {  
+  return createBrowserClient(  
+    process.env.NEXT\_PUBLIC\_SUPABASE\_URL\!,  
+    process.env.NEXT\_PUBLIC\_SUPABASE\_ANON\_KEY\!  
+  );  
+}
+
+// utils/supabase/server.ts  
+'use server';  
+import { createServerClient } from '@supabase/ssr';  
+import { cookies } from 'next/headers';  
+export async function createClient() {  
+  return createServerClient(  
+    process.env.NEXT\_PUBLIC\_SUPABASE\_URL\!,  
+    process.env.NEXT\_PUBLIC\_SUPABASE\_ANON\_KEY\!,  
+    {  
+      cookies: {  
+        get(name: string) {  
+          return cookies().get(name)?.value;  
+        },  
+        set(name: string, value: string, options: any) {  
+          cookies().set(name, value, options);  
+        },  
+        remove(name: string, options: any) {  
+          cookies().set(name, '', { ...options, maxAge: 0 });  
+        },  
+      },  
+    }  
+  );
+
+* }
+
+**Middleware**:  
+// middleware.ts  
+import { NextRequest, NextResponse } from 'next/server';  
+import { createClient } from '@/utils/supabase/server';
+
+export async function middleware(request: NextRequest) {  
+  const response \= NextResponse.next();  
+  const supabase \= await createClient();
+
+  const { data: { user }, error } \= await supabase.auth.getUser();
+
+  if (error || \!user) {  
+    // Optionally redirect to login for protected routes  
+    if (request.nextUrl.pathname.startsWith('/dashboard')) {  
+      return NextResponse.redirect(new URL('/login', request.url));  
+    }  
+  }
+
+  return response;  
+}
+
+export const config \= {  
+  matcher: \['/((?\!\_next/static|\_next/image|.\*\\\\.(?:svg|png|jpg|jpeg|gif|webp)$).\*)'\],
+
+* };
+
+**Login Page**:  
+// app/login/page.tsx  
+'use client';  
+import { login, signup } from './actions';  
+export default function LoginPage() {  
+  return (  
+    \<form\>  
+      \<label htmlFor="email"\>Email:\</label\>  
+      \<input id="email" name="email" type="email" required /\>  
+      \<label htmlFor="password"\>Password:\</label\>  
+      \<input id="password" name="password" type="password" required /\>  
+      \<label htmlFor="username"\>Username:\</label\>  
+      \<input id="username" name="username" type="text" required /\>  
+      \<button formAction={login}\>Log in\</button\>  
+      \<button formAction={signup}\>Sign up\</button\>  
+    \</form\>  
+  );  
+}
+
+// app/login/actions.ts  
+'use server';  
+import { revalidatePath } from 'next/cache';  
+import { redirect } from 'next/navigation';  
+import { createClient } from '@/utils/supabase/server';
+
+export async function login(formData: FormData) {  
+  const supabase \= await createClient();  
+  const data \= {  
+    email: formData.get('email') as string,  
+    password: formData.get('password') as string,  
+  };  
+  const { error } \= await supabase.auth.signInWithPassword(data);  
+  if (error) redirect('/error');  
+  revalidatePath('/', 'layout');  
+  redirect('/dashboard');  
+}
+
+export async function signup(formData: FormData) {  
+  const supabase \= await createClient();  
+  const data \= {  
+    email: formData.get('email') as string,  
+    password: formData.get('password') as string,  
+    options: {  
+      data: {  
+        username: formData.get('username') as string,  
+        role: 'member', // Default role  
+      },  
+    },  
+  };  
+  const { error } \= await supabase.auth.signUp(data);  
+  if (error) redirect('/error');  
+  revalidatePath('/', 'layout');  
+  redirect('/auth/confirm-instructions');
+
+* }
+
+**Confirmation Handler**:  
+// app/auth/confirm/route.ts  
+import { type EmailOtpType } from '@supabase/supabase-js';  
+import { NextRequest, NextResponse } from 'next/server';  
+import { createClient } from '@/utils/supabase/server';
+
+export async function GET(request: NextRequest) {  
+  const { searchParams } \= new URL(request.url);  
+  const token\_hash \= searchParams.get('token\_hash');  
+  const type \= searchParams.get('type') as EmailOtpType | null;  
+  const next \= searchParams.get('next') ?? '/dashboard';
+
+  if (token\_hash && type) {  
+    const supabase \= await createClient();  
+    const { error } \= await supabase.auth.verifyOtp({  
+      type,  
+      token\_hash,  
+    });  
+    if (\!error) return NextResponse.redirect(new URL(next, request.url));  
+  }  
+  return NextResponse.redirect(new URL('/error', request.url));
+
+* }
+
+**Protected Page Example**:  
+// app/dashboard/page.tsx  
+import { createClient } from '@/utils/supabase/server';  
+import { redirect } from 'next/navigation';
+
+export default async function Dashboard() {  
+  const supabase \= await createClient();  
+  const { data: { user } } \= await supabase.auth.getUser();
+
+  if (\!user) {  
+    redirect('/login');  
+  }
+
+  return \<div\>Welcome, {user.email}\</div\>;
+
+* }
+
+## **4\. User Flows**
+
+* **Member Signup**:  
+  1. Sign up via email/Google/Apple, providing username.  
+  2. Trigger adds entry to users\_public (e.g., { user\_id, username, joined\_at }).  
+  3. Confirm email via /auth/confirm.  
+  4. Complete profile, connect wearable, join spaces.  
+* **Member Feedback**:  
+  1. Submit progress via form (e.g., stress levels).  
+  2. Facilitator receives alert and responds.  
+* **Facilitator**:  
+  1. View member biometrics (via RLS).  
+  2. Provide coaching or moderate spaces.  
+* **Admin**:  
+  1. Create event (e.g., "Day 1: Cardio").  
+  2. Share in feed, track RSVPs.
+
+## **5\. UI/UX Considerations**
+
+* **Design**: Nature-inspired (greens, blues).  
+* **Screens**:  
+  * Home: Feed with posts/events.  
+  * Insights: Biometric trends/AI suggestions.  
+  * Events: Calendar/details.  
+  * Facilitator Dashboard: Member summaries.  
+* **Tools**: Figma, Tailwind CSS.
+
+## **6\. Implementation Plan**
+
+* **Phase 1 (MVP, 3 months)**:  
+  * SSR auth with trigger and RLS.  
+  * Spaces, posts, wearable integration.  
+  * Basic AI insights, feedback forms.  
+* **Phase 2 (6 months)**:  
+  * Event planning, content library.  
+  * Real-time chat, advanced AI.  
+  * PWA for mobile.  
+* **Phase 3 (9 months)**:  
+  * Analytics, offline access.  
+  * Enhanced facilitator tools.
+
+### **6.1 Team**
+
+* Frontend Developer (Next.js).  
+* Backend Developer (Supabase).  
+* UI/UX Designer.  
+* Data Scientist (AI).  
+* DevOps (Vercel, Supabase).
+
+## **7\. Success Metrics**
+
+* **Engagement**: 80% weekly active members.  
+* **Insights**: 70% engage with AI.  
+* **Feedback**: 50% monthly submissions.  
+* **Performance**: API latency \< 200ms, 99.9% uptime.  
+* **Satisfaction**: NPS \> 60\.
+
+## **8\. Risks and Mitigation**
+
+* **Risk**: Trigger failures in users\_public.  
+  * **Mitigation**: Add ON CONFLICT clause, test extensively.  
+* **Risk**: RLS misconfiguration.  
+  * **Mitigation**: Audit policies pre-launch.  
+* **Risk**: Privacy concerns.  
+  * **Mitigation**: Transparent consent, GDPR compliance.
+
+## **9\. Conclusion**
+
+The ROOTED Way platform, built with Next.js and Supabase's SSR authentication, delivers a secure, scalable hub for Rooted™ community engagement, event planning, and personalized wellness. The trigger and RLS policies ensure robust user management, aligning with Rooted™'s mission to foster embodied leadership.
 

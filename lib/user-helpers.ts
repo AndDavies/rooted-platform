@@ -1,5 +1,8 @@
 import { createClient } from '@/utils/supabase/client'
-import type { User, UserUpdate } from '@/lib/database.types'
+import type { Tables, TablesUpdate } from '@/types/supabase'
+
+type User = Tables<'users'>
+type UserUpdate = TablesUpdate<'users'>
 
 // Get the current user's profile
 export async function getUserProfile(userId: string): Promise<User | null> {

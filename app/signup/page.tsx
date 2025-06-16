@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { signup } from "@/app/actions"
+import { AuthAside } from "@/components/auth-aside"
 import Link from "next/link"
 
 export default async function SignupPage({
@@ -62,13 +63,8 @@ export default async function SignupPage({
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-gray-50 lg:block">
-        <img
-          src="/placeholder.svg"
-          alt="Rooted Platform - Community Wellness"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-      </div>
+      {/* Auth marketing side panel */}
+      <AuthAside />
     </div>
   )
 } 
