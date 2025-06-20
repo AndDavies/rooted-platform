@@ -1,4 +1,6 @@
 import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { SearchForm } from "@/components/search-form";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -50,12 +52,12 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "#",
+          url: "/dashboard",
           icon: RiScanLine,
         },
         {
           title: "Insights",
-          url: "#",
+          url: "/dashboard/insights",
           icon: RiBardLine,
         },
         {
@@ -71,7 +73,7 @@ const data = {
         },
         {
           title: "Integration",
-          url: "#",
+          url: "/dashboard/integration",
           icon: RiLoginCircleLine,
         },
         {
@@ -106,6 +108,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -127,9 +130,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuButton
                       asChild
                       className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
-                      isActive={item.isActive}
+                      isActive={pathname.startsWith(item.url)}
                     >
-                      <a href={item.url}>
+                      <Link href={item.url} prefetch>
                         {item.icon && (
                           <item.icon
                             className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
@@ -138,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           />
                         )}
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

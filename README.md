@@ -66,3 +66,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ---
 Generated automatically – see `docs/events-flow.md` for the canonical diagram.
+
+## 2025-06-16 – Recent work
+
+### Highlights
+- Built full Events workflow (admin creation, public RSVP & auto-wait-list).
+- Added `event_registrations` table, trigger, and RLS policies via Supabase migration.
+- New pages:
+  - `/admin/events` – extended form with all schema fields.
+  - `/events` – public list with RSVP / Cancel / Leave wait-list.
+- Refactored communities browser & admin pages; pill-button styling everywhere.
+- Removed `docs/` from the repo and `.gitignore`d it.
+- Fixed all ESLint errors blocking Vercel production build.
+
+### Next steps
+1. Admin registrations drawer (`/admin/events/[id]/registrations`) to promote wait-listed users.
+2. Email notifications on RSVP / wait-list promotion.
+3. Calendar view for events (`@fullcalendar/react`).
+4. E2E tests (Playwright) covering RSVP & capacity logic.
+5. Polish Members page error handling ("Provide email or user_id").
