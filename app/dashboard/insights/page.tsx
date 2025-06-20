@@ -25,7 +25,8 @@ export default async function InsightsPage() {
   } = await supabase.auth.getUser();
 
   let connected = false;
-  let latestMetrics: { metric_type: string; value: number; unit: string | null; timestamp: string }[] = [];
+  type MetricRow = { metric_type: string; value: number; unit: string | null; ts: string };
+  let latestMetrics: MetricRow[] = [];
 
   if (user) {
     const { data: conn } = await (supabase as any)
@@ -40,7 +41,7 @@ export default async function InsightsPage() {
       // Fetch the latest value for each metric_type
       const { data } = await (supabase as any)
         .rpc('get_latest_metrics', { p_connection_id: conn.id });
-      latestMetrics = data ?? [];
+      latestMetrics = (data ?? []) as MetricRow[];
     }
   }
 
@@ -93,7 +94,7 @@ export default async function InsightsPage() {
                   {m.unit ? ` ${m.unit}` : ''}
                 </span>
                 <time className="text-xs text-muted-foreground">
-                  {new Date(m.timestamp).toLocaleString()}
+                  {new Date(m.ts).toLocaleString()}
                 </time>
               </article>
             ))}
