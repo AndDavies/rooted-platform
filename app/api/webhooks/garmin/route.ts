@@ -100,21 +100,50 @@ export async function POST(request: NextRequest) {
 
     if (!conn) continue
 
-    // Example for dailySummary payload containing steps
-    if (evt.dailies?.steps) {
+    async function insert(metric: string, value: number, unit: string | null, ts: string | number) {
       await (supabaseAdmin as any).from('wearable_data').insert({
         connection_id: conn.id,
-        metric_type: 'steps',
-        value: evt.dailies.steps,
-        unit: 'steps',
-        timestamp: evt.dailies.startTimeInSeconds
-          ? new Date(evt.dailies.startTimeInSeconds * 1000).toISOString()
-          : new Date().toISOString(),
+        metric_type: metric,
+        value,
+        unit,
+        timestamp: typeof ts === 'number' ? new Date(ts * 1000).toISOString() : new Date(ts).toISOString(),
         source: 'garmin',
       })
     }
 
-    // Add more mappings as needed
+    // WELLNESS_DAILY summary
+    if (evt.dailies) {
+      const d = evt.dailies
+      if (d.steps) insert('steps', d.steps, 'steps', d.startTimeInSeconds ?? Date.now()/1000)
+      if (d.activeKilocalories) insert('active_calories', d.activeKilocalories, 'kcal', d.startTimeInSeconds)
+      if (d.caloriesToNextFloor) insert('floors', d.caloriesToNextFloor, 'floors', d.startTimeInSeconds)
+    }
+
+    // WELLNESS_SLEEP summary
+    if (evt.wellnessSleep) {
+      const s = evt.wellnessSleep
+      if (s.totalSleepSeconds) insert('sleep_total_seconds', s.totalSleepSeconds, 's', s.calendarDate)
+      if (s.deepSleepSeconds) insert('sleep_deep_seconds', s.deepSleepSeconds, 's', s.calendarDate)
+      if (s.remSleepSeconds) insert('sleep_rem_seconds', s.remSleepSeconds, 's', s.calendarDate)
+    }
+
+    // HRV summary
+    if (evt.hrv) {
+      const h = evt.hrv
+      if (h.rmssd) insert('hrv_rmssd', h.rmssd, 'ms', h.calendarDate)
+    }
+
+    // Stress summary
+    if (evt.stress) {
+      const st = evt.stress
+      if (st.stressScore) insert('stress_score', st.stressScore, 'score', st.calendarDate)
+    }
+
+    // Respiration epoch rate (per minute)
+    if (evt.respirationEpoch) {
+      const r = evt.respirationEpoch
+      if (r.respirationRate) insert('respiration_rate', r.respirationRate, 'rpm', r.startTimeInSeconds)
+    }
   }
 
   return new NextResponse('ok', { status: 200 })
