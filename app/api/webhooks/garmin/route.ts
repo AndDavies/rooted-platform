@@ -59,11 +59,6 @@ function verifyOAuth1(req: NextRequest, consumerSecret: string): boolean {
   return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(params.oauth_signature))
 }
 
-function verifySignature(secret: string, rawBody: string, signature: string): boolean {
-  const hmac = crypto.createHmac('sha256', secret).update(rawBody).digest('hex')
-  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(hmac))
-}
-
 export async function POST(request: NextRequest) {
   const rawBody = await request.text()
 
