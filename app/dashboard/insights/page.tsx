@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from "next";
-import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import {
   Breadcrumb,
