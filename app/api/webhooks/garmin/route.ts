@@ -56,10 +56,18 @@ function verifyOAuth1(req: NextRequest, consumerSecret: string): boolean {
     .update(baseString)
     .digest('base64')
 
+  console.debug('[Garmin] Base string', baseString)
+  console.debug('[Garmin] Computed sig', computed)
+  console.debug('[Garmin] Garmin sig', params.oauth_signature)
+
   return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(params.oauth_signature))
 }
 
 export async function POST(request: NextRequest) {
+  // --- Debugging: log signature details (remove once verified) ---
+  const debugAuth = request.headers.get('authorization') || ''
+  console.debug('[Garmin] Auth header', debugAuth)
+  console.debug('[Garmin] Raw URL', request.url)
   const rawBody = await request.text()
 
   // Optional signature verification
