@@ -84,6 +84,13 @@ export async function POST(request: NextRequest) {
     return new NextResponse('bad json', { status: 400 })
   }
 
+  // Store raw payload for black-box debugging
+  try {
+    await (supabaseAdmin as any).from('wearable_event_raw').insert({ payload })
+  } catch (e) {
+    console.error('[Garmin] Failed to persist raw payload', e)
+  }
+
   const events: any[] = payload?.events ?? []
 
   for (const evt of events) {
