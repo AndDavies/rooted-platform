@@ -114,35 +114,35 @@ export async function POST(request: NextRequest) {
     // WELLNESS_DAILY summary
     if (evt.dailies) {
       const d = evt.dailies
-      if (d.steps) insert('steps', d.steps, 'steps', d.startTimeInSeconds ?? Date.now()/1000)
-      if (d.activeKilocalories) insert('active_calories', d.activeKilocalories, 'kcal', d.startTimeInSeconds)
-      if (d.caloriesToNextFloor) insert('floors', d.caloriesToNextFloor, 'floors', d.startTimeInSeconds)
+      if (d.steps !== undefined) await insert('steps', d.steps, 'steps', d.startTimeInSeconds ?? Date.now() / 1000)
+      if (d.activeKilocalories !== undefined) await insert('active_calories', d.activeKilocalories, 'kcal', d.startTimeInSeconds)
+      if (d.floorsClimbed !== undefined) await insert('floors', d.floorsClimbed, 'floors', d.startTimeInSeconds)
     }
 
     // WELLNESS_SLEEP summary
     if (evt.wellnessSleep) {
       const s = evt.wellnessSleep
-      if (s.totalSleepSeconds) insert('sleep_total_seconds', s.totalSleepSeconds, 's', s.calendarDate)
-      if (s.deepSleepSeconds) insert('sleep_deep_seconds', s.deepSleepSeconds, 's', s.calendarDate)
-      if (s.remSleepSeconds) insert('sleep_rem_seconds', s.remSleepSeconds, 's', s.calendarDate)
+      if (s.totalSleepSeconds !== undefined) await insert('sleep_total_seconds', s.totalSleepSeconds, 's', s.calendarDate)
+      if (s.deepSleepSeconds !== undefined) await insert('sleep_deep_seconds', s.deepSleepSeconds, 's', s.calendarDate)
+      if (s.remSleepSeconds !== undefined) await insert('sleep_rem_seconds', s.remSleepSeconds, 's', s.calendarDate)
     }
 
     // HRV summary
     if (evt.hrv) {
       const h = evt.hrv
-      if (h.rmssd) insert('hrv_rmssd', h.rmssd, 'ms', h.calendarDate)
+      if (h.rmssd !== undefined) await insert('hrv_rmssd', h.rmssd, 'ms', h.calendarDate)
     }
 
     // Stress summary
     if (evt.stress) {
       const st = evt.stress
-      if (st.stressScore) insert('stress_score', st.stressScore, 'score', st.calendarDate)
+      if (st.stressScore !== undefined) await insert('stress_score', st.stressScore, 'score', st.calendarDate)
     }
 
     // Respiration epoch rate (per minute)
     if (evt.respirationEpoch) {
       const r = evt.respirationEpoch
-      if (r.respirationRate) insert('respiration_rate', r.respirationRate, 'rpm', r.startTimeInSeconds)
+      if (r.respirationRate !== undefined) await insert('respiration_rate', r.respirationRate, 'rpm', r.startTimeInSeconds)
     }
   }
 

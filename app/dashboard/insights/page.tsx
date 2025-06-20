@@ -25,7 +25,7 @@ export default async function InsightsPage() {
   } = await supabase.auth.getUser();
 
   let connected = false;
-  type MetricRow = { metric_type: string; value: number; unit: string | null; ts: string };
+  type MetricRow = { metric_type: string; value: number; unit: string | null; timestamp: string };
   let latestMetrics: MetricRow[] = [];
 
   if (user) {
@@ -94,7 +94,7 @@ export default async function InsightsPage() {
                   {m.unit ? ` ${m.unit}` : ''}
                 </span>
                 <time className="text-xs text-muted-foreground">
-                  {new Date(m.ts).toLocaleString()}
+                  {new Date(m.timestamp).toLocaleString()}
                 </time>
               </article>
             ))}
