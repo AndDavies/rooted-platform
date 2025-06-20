@@ -116,7 +116,7 @@ export default function InsightsPage() {
         <h1 className="text-2xl font-semibold">Personalized Insights</h1>
         <p className="text-sm text-muted-foreground max-w-prose">
           Below are suggestions generated from your recent biometrics, sleep, and activity
-          data. Use them to guide today's wellness journey.
+          data. Use them to guide today&apos;s wellness journey.
         </p>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
