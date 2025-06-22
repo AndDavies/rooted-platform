@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
       unit,
       timestamp: typeof ts === 'number' ? new Date(ts * 1000).toISOString() : new Date(ts).toISOString(),
       source: 'garmin',
-    })
+    }, { onConflict: 'connection_id,metric_type,timestamp' })
   }
 
   // If Garmin sends the old structure with a top-level `events` array we continue to support it.

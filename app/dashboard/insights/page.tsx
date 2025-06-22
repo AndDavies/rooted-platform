@@ -12,6 +12,8 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { RiBardLine } from "@remixicon/react";
+import BreathAwarenessWidget from '@/components/insights/BreathAwarenessWidget'
+import StepSerenityWidget from '@/components/insights/StepSerenityWidget'
 
 export const metadata: Metadata = {
   title: "Insights - Rooted Platform",
@@ -27,6 +29,17 @@ export default async function InsightsPage() {
   let connected = false;
   type MetricRow = { metric_type: string; value: number; unit: string | null; timestamp: string };
   let latestMetrics: MetricRow[] = [];
+
+  function formatTimestamp(ts?: string | null): string {
+    if (!ts) return ''
+    // Convert Postgres 'YYYY-MM-DD HH:MI:SS.mmmuuu+TZ' to ISO the browser can parse
+    let iso = ts.replace(' ', 'T')
+    // Trim microseconds -> milliseconds for JS Date
+    iso = iso.replace(/\.(\d{3})\d+/, '.$1')
+
+    const d = new Date(iso)
+    return isNaN(d.getTime()) ? ts : d.toLocaleString()
+  }
 
   if (user) {
     const { data: conn } = await (supabase as any)
@@ -79,6 +92,12 @@ export default async function InsightsPage() {
           Below is a live glimpse of your most recent Garmin data.
         </p>
 
+        {/* Breath Awareness line chart */}
+        <BreathAwarenessWidget />
+
+        {/* Step Serenity bar chart */}
+        <StepSerenityWidget />
+
         {connected && latestMetrics.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
             {latestMetrics.map((m) => (
@@ -94,7 +113,7 @@ export default async function InsightsPage() {
                   {m.unit ? ` ${m.unit}` : ''}
                 </span>
                 <time className="text-xs text-muted-foreground">
-                  {new Date(m.timestamp).toLocaleString()}
+                  {formatTimestamp(m.timestamp)}
                 </time>
               </article>
             ))}
