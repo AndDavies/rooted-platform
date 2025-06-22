@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/utils/supabase/server'
@@ -70,7 +71,6 @@ export default async function BreathAwarenessWidget() {
 
   const respRows = (dayRows ?? []).filter((r: any) => r.metric_type === 'respiration_rate')
   const hrvRows = (dayRows ?? []).filter((r: any) => r.metric_type === 'hrv_rmssd')
-  const stepRows = (dayRows ?? []).filter((r: any) => r.metric_type === 'steps')
 
   const chartData: BreathDataPoint[] = respRows.map((r: any) => ({ timestamp: r.timestamp, rate: Number(r.value) }))
 
