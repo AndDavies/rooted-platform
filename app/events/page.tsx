@@ -43,7 +43,6 @@ export default async function EventsPage() {
                 {new Date(evt.start_time).toLocaleString()} —{' '}
                 {evt.end_time ? new Date(evt.end_time).toLocaleString() : ''}
               </p>
-              {/* @ts-expect-error generated types may lag behind */}
               <p className="text-sm flex-1">{evt.description ?? ''}</p>
 
               {isRegistered ? (
