@@ -1,11 +1,21 @@
 import { DynamicTool } from "@langchain/core/tools"
 import { createClient } from "@/utils/supabase/server"
 
+interface WearableConnection {
+  id: string
+}
+
+interface SleepDataRecord {
+  value: string
+  timestamp: string
+  metric_type: string
+}
+
 export function getSleepTrendTool(userId?: string) {
   return new DynamicTool({
     name: "getSleepTrend",
     description: "Returns a summary of the user's sleep patterns over the past 7 days, including total sleep time, sleep efficiency, and sleep stage analysis.",
-    func: async (input: string) => {
+    func: async (_input: string) => {
       try {
         if (!userId) {
           return JSON.stringify({
@@ -17,12 +27,12 @@ export function getSleepTrendTool(userId?: string) {
         const supabase = await createClient()
         
         // Get user's Garmin connection
-        const { data: connection } = await (supabase as any)
+        const { data: connection } = await supabase
           .from('wearable_connections')
           .select('id')
           .eq('user_id', userId)
           .eq('wearable_type', 'garmin')
-          .maybeSingle()
+          .maybeSingle() as { data: WearableConnection | null }
 
         if (!connection) {
           return JSON.stringify({
@@ -35,13 +45,13 @@ export function getSleepTrendTool(userId?: string) {
         const sevenDaysAgo = new Date()
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-        const { data: sleepData } = await (supabase as any)
+        const { data: sleepData } = await supabase
           .from('wearable_data')
           .select('value, timestamp, metric_type')
           .eq('connection_id', connection.id)
           .in('metric_type', ['sleep_total_seconds', 'sleep_deep_seconds', 'sleep_rem_seconds'])
           .gte('timestamp', sevenDaysAgo.toISOString())
-          .order('timestamp', { ascending: false })
+          .order('timestamp', { ascending: false }) as { data: SleepDataRecord[] | null }
 
         if (!sleepData || sleepData.length === 0) {
           return JSON.stringify({
@@ -53,7 +63,7 @@ export function getSleepTrendTool(userId?: string) {
         // Group by date and metric type
         const sleepByDate: { [date: string]: { [metric: string]: number } } = {}
         
-        sleepData.forEach((record: any) => {
+        sleepData.forEach((record: SleepDataRecord) => {
           const date = new Date(record.timestamp).toISOString().split('T')[0]
           if (!sleepByDate[date]) {
             sleepByDate[date] = {}
@@ -98,7 +108,7 @@ export function getSleepTrendTool(userId?: string) {
 
         // Generate insights
         let insights = ""
-        let recommendations = []
+        const recommendations: string[] = []
 
         if (avgTotalHours < 7) {
           insights = `Your average sleep duration of ${avgTotalHours} hours is below the recommended 7-9 hours. This may impact your recovery and performance.`

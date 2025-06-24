@@ -6,6 +6,33 @@ import { headers } from 'next/headers'
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
 
+// Define types for better type safety
+interface UserProfile {
+  full_name?: string
+  ai_preferences?: Record<string, unknown>
+  recovery_goals?: Record<string, unknown>
+  health_profile?: Record<string, unknown>
+  timezone?: string
+}
+
+interface ChatMessage {
+  role: string
+  content: string
+  created_at: string
+}
+
+interface WearableConnection {
+  wearable_type: string
+  created_at: string
+}
+
+interface UserContext {
+  userProfile: UserProfile
+  recentMessages: ChatMessage[]
+  wearableConnection: WearableConnection | null
+  widgetContext?: Record<string, unknown>
+}
+
 // Validate and sanitize input
 function validateInput(message: string): { isValid: boolean; error?: string } {
   if (!message || typeof message !== 'string') {
@@ -47,15 +74,8 @@ function checkRateLimit(identifier: string): { allowed: boolean; error?: string 
   return { allowed: true }
 }
 
-// Define the context type
-interface UserContext {
-  userProfile: any
-  recentMessages: any[]
-  wearableConnection: any
-  widgetContext?: any
-}
-
 // Load user context and preferences
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function loadUserContext(userId: string, supabase: any): Promise<UserContext> {
   try {
     // Get user profile and AI preferences
@@ -66,7 +86,7 @@ async function loadUserContext(userId: string, supabase: any): Promise<UserConte
       .single()
 
     // Get recent chat history (last 10 messages for context)
-    const { data: recentMessages } = await (supabase as any)
+    const { data: recentMessages } = await supabase
       .from('chat_messages')
       .select('role, content, created_at')
       .eq('user_id', userId)
@@ -80,18 +100,10 @@ async function loadUserContext(userId: string, supabase: any): Promise<UserConte
       .eq('user_id', userId)
       .maybeSingle()
 
-    // TODO: Future - Load relevant vector context for RAG
-    // const { data: vectorContext } = await (supabase as any)
-    //   .from('user_vector_context')
-    //   .select('content, metadata')
-    //   .eq('user_id', userId)
-    //   .limit(5)
-
     return {
       userProfile: userProfile || {},
       recentMessages: recentMessages || [],
       wearableConnection,
-      // vectorContext: vectorContext || []
     }
   } catch (error) {
     console.error('Error loading user context:', error)
@@ -99,7 +111,6 @@ async function loadUserContext(userId: string, supabase: any): Promise<UserConte
       userProfile: {},
       recentMessages: [],
       wearableConnection: null,
-      // vectorContext: []
     }
   }
 }
@@ -110,7 +121,7 @@ async function routeToAgent(
   userId: string, 
   mode: string, 
   context: UserContext
-): Promise<{ success: boolean; response: string; error: string | null; metadata?: any }> {
+): Promise<{ success: boolean; response: string; error: string | null; metadata?: Record<string, unknown> }> {
   
   const startTime = Date.now()
   console.log(`[API] Routing to agent - Mode: ${mode}, User: ${userId}`)
@@ -118,7 +129,7 @@ async function routeToAgent(
   // Build conversation history for context
   const chatHistory = context.recentMessages
     .reverse() // Reverse to chronological order
-    .map((msg: any) => `${msg.role}: ${msg.content}`)
+    .map((msg: ChatMessage) => `${msg.role}: ${msg.content}`)
     .join('\n')
 
   // Add user context to the message for better personalization
@@ -178,13 +189,14 @@ async function routeToAgent(
 }
 
 // Save conversation to database with enhanced metadata
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function saveConversation(
   userId: string,
   sessionId: string | null,
   userMessage: string,
   agentResponse: string,
   mode: string,
-  metadata: any,
+  metadata: Record<string, unknown>,
   supabase: any
 ) {
   const startTime = Date.now()
@@ -194,7 +206,7 @@ async function saveConversation(
 
     // Create new session if none provided
     if (!actualSessionId) {
-      const { data: newSession, error: sessionError } = await (supabase as any)
+      const { data: newSession, error: sessionError } = await supabase
         .from('chat_sessions')
         .insert({
           user_id: userId,
@@ -213,13 +225,13 @@ async function saveConversation(
         return
       }
       
-      actualSessionId = newSession.id
+      actualSessionId = newSession?.id
     }
 
     const now = new Date().toISOString()
 
     // Save user message
-    await (supabase as any).from('chat_messages').insert({
+    await supabase.from('chat_messages').insert({
       session_id: actualSessionId,
       user_id: userId,
       role: 'user',
@@ -232,7 +244,7 @@ async function saveConversation(
     })
 
     // Save agent response
-    await (supabase as any).from('chat_messages').insert({
+    await supabase.from('chat_messages').insert({
       session_id: actualSessionId,
       user_id: userId,
       role: 'assistant',
@@ -246,7 +258,7 @@ async function saveConversation(
     })
 
     // Update session timestamp and metadata
-    await (supabase as any)
+    await supabase
       .from('chat_sessions')
       .update({ 
         updated_at: now,
@@ -257,7 +269,7 @@ async function saveConversation(
           performance: metadata
         }
       })
-      .eq('id', actualSessionId)
+      .eq('id', actualSessionId || '')
 
     const duration = Date.now() - startTime
     console.log(`[API] Conversation saved successfully in ${duration}ms`)
@@ -355,15 +367,12 @@ export async function POST(request: NextRequest) {
       message,
       agentResponse.response,
       mode,
-      agentResponse.metadata,
+      agentResponse.metadata || {},
       supabase
     )
 
     const totalDuration = Date.now() - requestStartTime
     console.log(`[API] Request completed successfully in ${totalDuration}ms`)
-
-    // TODO: Future - Generate and store embeddings for semantic search
-    // await generateAndStoreEmbeddings(user.id, message, agentResponse.response)
 
     return NextResponse.json({
       response: agentResponse.response,
@@ -373,12 +382,12 @@ export async function POST(request: NextRequest) {
       performance: {
         totalDuration,
         contextLoadDuration: contextDuration,
-        agentDuration: agentResponse.metadata?.duration || 0,
-        toolsUsed: agentResponse.metadata?.toolsUsed || [],
-        modelUsed: agentResponse.metadata?.modelUsed || 'unknown'
+        agentDuration: (agentResponse.metadata as Record<string, unknown>)?.duration || 0,
+        toolsUsed: (agentResponse.metadata as Record<string, unknown>)?.toolsUsed || [],
+        modelUsed: (agentResponse.metadata as Record<string, unknown>)?.modelUsed || 'unknown'
       },
       usage: {
-        tokensUsed: agentResponse.metadata?.tokensUsed || 'estimated',
+        tokensUsed: (agentResponse.metadata as Record<string, unknown>)?.tokensUsed || 'estimated',
         remainingRequests: 20 - (rateLimitStore.get(rateLimitKey)?.count || 0)
       }
     })
@@ -422,7 +431,7 @@ export async function GET(request: NextRequest) {
 
     if (sessionId) {
       // Get specific session messages
-      const { data: messages, error } = await (supabase as any)
+      const { data: messages, error } = await supabase
         .from('chat_messages')
         .select('role, content, created_at, metadata')
         .eq('session_id', sessionId)
@@ -440,7 +449,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ messages })
     } else {
       // Get user's chat sessions
-      const { data: sessions, error } = await (supabase as any)
+      const { data: sessions, error } = await supabase
         .from('chat_sessions')
         .select('id, title, agent_type, created_at, updated_at')
         .eq('user_id', user.id)

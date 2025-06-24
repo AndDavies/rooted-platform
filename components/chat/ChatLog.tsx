@@ -20,16 +20,17 @@ export default function ChatLog({ messages }: ChatLogProps) {
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/10">
-            <Bot className="w-9 h-9 text-primary" />
+        <div className="text-center py-8 px-4">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4">
+            <Bot size={24} className="text-white" />
           </div>
-          <h3 className="text-xl font-semibold mb-3 tracking-tight text-gray-900">
-            Welcome to your wellness coach
-          </h3>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            Hi! I'm Zeger, your personal recovery and wellness coach. 
-            Ask me about your HRV trends, sleep quality, or any wellness questions you have.
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Meet Your AI Wellness Coach</h3>
+          <p className="text-sm text-gray-600 max-w-md mx-auto">
+            Hi! I&apos;m Zeger, your personal recovery and wellness coach. I can help you understand your biometric data, 
+            provide personalized wellness insights, and answer questions about your health and recovery.
+          </p>
+          <p className="text-xs text-gray-500 mt-3">
+            Ask me about your HRV, sleep patterns, or any wellness questions you have!
           </p>
         </div>
       </div>

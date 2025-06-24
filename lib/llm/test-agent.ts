@@ -11,7 +11,7 @@ import { runRecoveryAgentForAPI } from './agent'
 export async function testRecoveryAgent(): Promise<{
   success: boolean
   message: string
-  details?: any
+  details?: Record<string, unknown>
 }> {
   console.log('[Test] Starting AI agent test...')
   
@@ -76,7 +76,7 @@ export async function testRecoveryAgent(): Promise<{
 export async function testRecoveryAgentWithBiometrics(userId: string): Promise<{
   success: boolean
   message: string
-  details?: any
+  details?: Record<string, unknown>
 }> {
   console.log(`[Test] Starting biometric AI test for user: ${userId}`)
   

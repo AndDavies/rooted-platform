@@ -24,8 +24,14 @@ interface AgentResponse {
 interface AgentContext {
   userId?: string
   chatHistory?: string
-  userProfile?: any
-  widgetContext?: any
+  userProfile?: Record<string, unknown>
+  widgetContext?: Record<string, unknown>
+}
+
+interface AgentStep {
+  action?: {
+    tool?: string
+  }
 }
 
 export async function createRecoveryAgent(userId?: string) {
@@ -147,7 +153,7 @@ export async function runRecoveryAgent(
 
     // Extract tools used from intermediate steps
     if (response.intermediateSteps) {
-      response.intermediateSteps.forEach((step: any) => {
+      response.intermediateSteps.forEach((step: AgentStep) => {
         if (step.action && step.action.tool) {
           toolsUsed.push(step.action.tool)
         }
@@ -218,8 +224,8 @@ export async function runRecoveryAgentForAPI(
   userMessage: string,
   userId?: string,
   chatHistory?: string,
-  userProfile?: any,
-  widgetContext?: any
+  userProfile?: Record<string, unknown>,
+  widgetContext?: Record<string, unknown>
 ): Promise<AgentResponse> {
   return runRecoveryAgent(userMessage, userId, {
     chatHistory,

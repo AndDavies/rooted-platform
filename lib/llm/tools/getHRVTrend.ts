@@ -2,11 +2,20 @@
 import { DynamicTool } from "@langchain/core/tools"
 import { createClient } from "@/utils/supabase/server"
 
+interface WearableConnection {
+  id: string
+}
+
+interface WearableDataRecord {
+  value: string
+  timestamp: string
+}
+
 export function getHRVTrendTool(userId?: string) {
   return new DynamicTool({
-    name: "getHRVTrend",
+  name: "getHRVTrend",
     description: "Returns a summary of the user's HRV trend over the past 7 days, including average values, trend direction, and recovery insights.",
-    func: async (input: string) => {
+  func: async (_input: string) => {
       try {
         if (!userId) {
           return JSON.stringify({
@@ -18,12 +27,12 @@ export function getHRVTrendTool(userId?: string) {
         const supabase = await createClient()
         
         // Get user's Garmin connection
-        const { data: connection } = await (supabase as any)
+        const { data: connection } = await supabase
           .from('wearable_connections')
           .select('id')
           .eq('user_id', userId)
           .eq('wearable_type', 'garmin')
-          .maybeSingle()
+          .maybeSingle() as { data: WearableConnection | null }
 
         if (!connection) {
           return JSON.stringify({
@@ -36,13 +45,13 @@ export function getHRVTrendTool(userId?: string) {
         const sevenDaysAgo = new Date()
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-        const { data: hrvData } = await (supabase as any)
+        const { data: hrvData } = await supabase
           .from('wearable_data')
           .select('value, timestamp')
           .eq('connection_id', connection.id)
           .eq('metric_type', 'hrv_rmssd')
           .gte('timestamp', sevenDaysAgo.toISOString())
-          .order('timestamp', { ascending: false })
+          .order('timestamp', { ascending: false }) as { data: WearableDataRecord[] | null }
 
         if (!hrvData || hrvData.length === 0) {
           return JSON.stringify({
@@ -52,7 +61,7 @@ export function getHRVTrendTool(userId?: string) {
         }
 
         // Calculate trends
-        const values = hrvData.map((d: any) => parseFloat(d.value))
+        const values = hrvData.map((d: WearableDataRecord) => parseFloat(d.value))
         const averageHRV = Math.round(values.reduce((a: number, b: number) => a + b, 0) / values.length)
         
         // Simple trend calculation (comparing first half vs second half)
@@ -96,7 +105,7 @@ export function getHRVTrendTool(userId?: string) {
           recommendation: trend === "declining" 
             ? "Focus on sleep quality, stress reduction, and consider reducing training intensity."
             : "Continue with your current recovery practices."
-        }
+    }
 
         return JSON.stringify(result)
       } catch (error) {
@@ -106,6 +115,6 @@ export function getHRVTrendTool(userId?: string) {
           message: "There was an error retrieving your HRV trends. Please try again later."
         })
       }
-    },
-  })
+  },
+})
 }
