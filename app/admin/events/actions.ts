@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
+import { TablesInsert, TablesUpdate } from '@/types/supabase'
 
 export async function createEvent(formData: FormData) {
   const supabase = await createClient()
@@ -23,17 +24,17 @@ export async function createEvent(formData: FormData) {
     redirect('/dashboard')
   }
 
-  const payload = {
+  const payload: TablesInsert<'events'> = {
     title: formData.get('title') as string,
     description: (formData.get('description') as string) || null,
-    type: formData.get('type') as string,
+    type: formData.get('type') as TablesInsert<'events'>['type'],
     start_time: formData.get('start_time') as string,
     end_time: (formData.get('end_time') as string) || null,
     timezone: (formData.get('timezone') as string) || null,
     location: (formData.get('location') as string) || null,
     virtual_link: (formData.get('virtual_link') as string) || null,
     capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
-    access: formData.get('access') as string,
+    access: formData.get('access') as TablesInsert<'events'>['access'],
     status: 'published',
     banner_image_url: (formData.get('banner_image_url') as string) || null,
     metadata: null,
@@ -73,18 +74,18 @@ export async function updateEvent(id: string, formData: FormData) {
     redirect('/dashboard')
   }
 
-  const payload = {
+  const payload: TablesUpdate<'events'> = {
     title: formData.get('title') as string,
     description: (formData.get('description') as string) || null,
-    type: formData.get('type') as string,
+    type: formData.get('type') as TablesUpdate<'events'>['type'],
     start_time: formData.get('start_time') as string,
     end_time: (formData.get('end_time') as string) || null,
     timezone: (formData.get('timezone') as string) || null,
     location: (formData.get('location') as string) || null,
     virtual_link: (formData.get('virtual_link') as string) || null,
     capacity: formData.get('capacity') ? Number(formData.get('capacity')) : null,
-    access: formData.get('access') as string,
-    status: formData.get('status') as string,
+    access: formData.get('access') as TablesUpdate<'events'>['access'],
+    status: formData.get('status') as TablesUpdate<'events'>['status'],
     banner_image_url: (formData.get('banner_image_url') as string) || null,
     external_booking_url: (formData.get('external_booking_url') as string) || null,
     host: formData.get('host') as string | null,
