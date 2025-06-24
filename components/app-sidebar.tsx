@@ -18,42 +18,52 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-  RiScanLine,
-  RiBardLine,
-  RiUserFollowLine,
-  RiCodeSSlashLine,
-  RiLoginCircleLine,
-  RiLayoutLeftLine,
-  RiSettings3Line,
   RiLeafLine,
+  RiChatSmile3Line,
+  RiHeartPulseLine,
+  RiBardLine,
+  RiAlarmWarningLine,
+  RiCalendarScheduleLine,
+  RiFridgeLine,
+  RiSettings3Line,
+  RiUserSettingsLine,
+  RiLoginCircleLine,
   RiLogoutBoxLine,
 } from "@remixicon/react";
 
-// This is sample data.
+// Navigation data following the new structure
 const data = {
   teams: [
     {
-      name: "InnovaCraft",
-      logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
-    },
-    {
-      name: "Acme Corp.",
-      logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
-    },
-    {
-      name: "Evil Corp.",
+      name: "Rooted Platform",
       logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
     },
   ],
   navMain: [
     {
-      title: "Sections",
+      title: "Overview",
       url: "#",
       items: [
         {
           title: "Dashboard",
           url: "/dashboard",
-          icon: RiScanLine,
+          icon: RiLeafLine,
+        },
+        {
+          title: "AI Coach",
+          url: "/dashboard/chat",
+          icon: RiChatSmile3Line,
+        },
+      ],
+    },
+    {
+      title: "Biometrics",
+      url: "#",
+      items: [
+        {
+          title: "Recovery",
+          url: "/dashboard/recovery",
+          icon: RiHeartPulseLine,
         },
         {
           title: "Insights",
@@ -61,46 +71,46 @@ const data = {
           icon: RiBardLine,
         },
         {
-          title: "Contacts",
-          url: "#",
-          icon: RiUserFollowLine,
-          isActive: true,
-        },
-        {
-          title: "Tools",
-          url: "#",
-          icon: RiCodeSSlashLine,
-        },
-        {
-          title: "Integration",
-          url: "/dashboard/integration",
-          icon: RiLoginCircleLine,
-        },
-        {
-          title: "Layouts",
-          url: "#",
-          icon: RiLayoutLeftLine,
-        },
-        {
-          title: "Reports",
-          url: "#",
-          icon: RiLeafLine,
+          title: "Burnout Analysis",
+          url: "/dashboard/insights/burnout",
+          icon: RiAlarmWarningLine,
         },
       ],
     },
     {
-      title: "Other",
+      title: "Guidance",
       url: "#",
       items: [
         {
-          title: "Settings",
-          url: "#",
-          icon: RiSettings3Line,
+          title: "Planning",
+          url: "/dashboard/planning",
+          icon: RiCalendarScheduleLine,
         },
         {
-          title: "Help Center",
-          url: "#",
-          icon: RiLeafLine,
+          title: "Nutrition",
+          url: "/dashboard/nutrition",
+          icon: RiFridgeLine,
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "#",
+      items: [
+        {
+          title: "Preferences",
+          url: "/dashboard/settings/preferences",
+          icon: RiUserSettingsLine,
+        },
+        {
+          title: "Integrations",
+          url: "/dashboard/settings/integrations",
+          icon: RiLoginCircleLine,
+        },
+        {
+          title: "Account",
+          url: "/dashboard/settings/account",
+          icon: RiSettings3Line,
         },
       ],
     },

@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     response_type: 'code',
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
-    redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/integration/garmin-callback`,
+    redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/integrations/garmin-callback`,
     state,
   })
 

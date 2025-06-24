@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const state = url.searchParams.get('state')
 
   if (!code || !state) {
-    return NextResponse.redirect(new URL('/dashboard/integration?error=missing_params', request.url))
+    return NextResponse.redirect(new URL('/dashboard/settings/integrations?error=missing_params', request.url))
   }
 
   const {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     .single()
 
   if (pkceErr || !pkceRows) {
-    return NextResponse.redirect(new URL('/dashboard/integration?error=invalid_state', request.url))
+    return NextResponse.redirect(new URL('/dashboard/settings/integrations?error=invalid_state', request.url))
   }
 
   const codeVerifier = pkceRows.code_verifier as string
@@ -43,12 +43,12 @@ export async function GET(request: NextRequest) {
       grant_type: 'authorization_code',
       code,
       code_verifier: codeVerifier,
-      redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/integration/garmin-callback`,
+      redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/integrations/garmin-callback`,
     }),
   })
 
   if (!tokenResp.ok) {
-    return NextResponse.redirect(new URL('/dashboard/integration?error=token', request.url))
+    return NextResponse.redirect(new URL('/dashboard/settings/integrations?error=token', request.url))
   }
 
   const tokenJson = await tokenResp.json()
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     headers: { Authorization: `Bearer ${access_token}` },
   })
   if (!userResp.ok) {
-    return NextResponse.redirect(new URL('/dashboard/integration?error=user', request.url))
+    return NextResponse.redirect(new URL('/dashboard/settings/integrations?error=user', request.url))
   }
   const { userId } = await userResp.json() as any
 
@@ -88,5 +88,5 @@ export async function GET(request: NextRequest) {
   // Delete pkce row
   await (supabase as any).from('oauth_pkce_states').delete().eq('state', state)
 
-  return NextResponse.redirect(new URL('/dashboard/integration', request.url))
+  return NextResponse.redirect(new URL('/dashboard/settings/integrations', request.url))
 } 

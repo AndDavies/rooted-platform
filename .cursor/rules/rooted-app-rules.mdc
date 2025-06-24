@@ -1,0 +1,133 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## 📦 Project Rules for Biometric Wellness App with AI Coaching (Cursor-Ready)
+
+---
+
+### `react-best-practices`
+**description**: Best practices for React applications  
+**globs**: `**/*.{ts,tsx,js,jsx}`
+
+```md
+- Use functional components and hooks for state management.
+- Keep components small and focused on a single responsibility.
+- Use PropTypes or TypeScript for type checking.
+- Implement error boundaries for better error handling.
+- Optimize performance with React.memo and useCallback.
+```
+
+---
+
+### `nextjs-best-practices`
+**description**: Best practices for Next.js applications and routing  
+**globs**: `**/*.{ts,tsx}`
+
+```md
+- Use the App Router for better performance and modular layout.
+- Leverage layout.tsx for consistent section UI.
+- Implement proper error boundaries (error.tsx).
+- Use `next/image` for optimized images.
+- Use SSR for personalized content, and SSG for static info.
+- Use dynamic routing for user-level dashboards.
+```
+
+---
+
+### `typescript-best-practices`
+**description**: TypeScript coding standards and type safety guidelines  
+**globs**: `**/*.{ts,tsx}`
+
+```md
+- Enable strict null checks in tsconfig.
+- Prefer interfaces over type aliases for object shapes.
+- Use type guards and type assertions for edge cases.
+- Avoid using `any`; prefer unknown or narrow union types.
+- Store shared types in `types/` directory.
+```
+
+---
+
+### `tailwindcss-best-practices`
+**description**: Best practices for using Tailwind CSS  
+**globs**: `**/*.{ts,tsx,css}`
+
+```md
+- Use utility-first classes; avoid unnecessary custom CSS.
+- Group classes logically: layout > spacing > typography > color.
+- Use responsive classes (`sm:`, `md:`) for layout changes.
+- Prefer standard Tailwind spacing/sizing over arbitrary values.
+- Use Tailwind plugins like `@tailwind/forms` for inputs.
+```
+
+---
+
+### `shadcn-best-practices`
+**description**: Guidelines for using Shadcn UI components  
+**globs**: `**/*.{ts,tsx}`
+
+```md
+- Follow Shadcn component conventions (e.g., `Button`, `Card`, `Dialog`).
+- Compose reusable components with base primitives.
+- Maintain consistent styling using Shadcn tokens and utilities.
+- Isolate UI logic inside components and move state lifting to page scope.
+```
+
+---
+
+### `ai-agent-best-practices`
+**description**: Best practices for building AI agents with LangChain and OpenAI  
+**globs**: `**/*.{ts,tsx}`
+
+```md
+- Use LangChain's modular agent architecture.
+- Place agent tools in `lib/agent/tools/`.
+- Keep OpenAI setup reusable (e.g., `getLLM()` in `lib/llm/`).
+- Inject user memory or embeddings via pgvector.
+- Use environment variables for model API keys and config.
+- Leverage multi-model routing to optimize performance/cost.
+- Use function-calling or ReAct agent logic for tool usage.
+```
+
+---
+
+### `biometric-app-structure`
+**description**: Structure and file organization for the biometric app  
+**globs**: `**/*.{ts,tsx}`
+
+```md
+- Store wearable parsing logic in `lib/biometrics/` (e.g., `hrv.ts`, `sleep.ts`).
+- Visualize key metrics with widgets in `components/widgets/`.
+- Store prompts, instructions, and system messages in `lib/prompts/`.
+- Place daily or weekly summaries in `lib/analysis/`.
+```
+
+---
+
+### `openai-usage`
+**description**: Guidelines for OpenAI integration  
+**globs**: `**/*.{ts,tsx}`
+
+```md
+- Call OpenAI securely from server routes only.
+- Abstract model config into reusable LLM factory.
+- Handle streaming responses and display in real-time chat.
+- Rate-limit and cache responses where applicable.
+- Log token usage for performance insight.
+```
+
+---
+
+### `next-langchain-routing`
+**description**: Routing architecture for LangChain tools and chat agents  
+**globs**: `**/app/**`
+
+```md
+- Use `/api/chat` for chat agent input/output.
+- Use `/api/planning` and `/api/insights` for specialized agents/tools.
+- Reserve `/dashboard/chat` for UI interaction with the LLM.
+- Serve insights and trends via widgets on `/dashboard` and `/recovery`.
+- Keep webhook logic isolated in `/api/webhooks/`.
+- Avoid bloated endpoints — separate route logic for tools vs. chat.
