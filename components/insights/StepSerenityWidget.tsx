@@ -5,7 +5,11 @@ import { createClient } from '@/utils/supabase/server'
 import StepBarChart from '@/components/insights/StepBarChart'
 import { Suspense } from 'react'
 
-export default async function StepSerenityWidget() {
+interface StepSerenityWidgetProps {
+  selectedDate?: string // YYYY-MM-DD format, optional
+}
+
+export default async function StepSerenityWidget({ selectedDate }: StepSerenityWidgetProps = {}) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -20,36 +24,46 @@ export default async function StepSerenityWidget() {
     .maybeSingle()
   if (!conn) return null
 
-  const { data: latest } = await (supabase as any)
-    .from('wearable_data')
-    .select('timestamp')
-    .eq('connection_id', conn.id)
-    .eq('metric_type', 'steps')
-    .order('timestamp', { ascending: false })
-    .limit(1)
-    .maybeSingle()
-  if (!latest) {
-    return (
-      <Card className="bg-card border shadow-md">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-primary">
-            <Link href="/integrations/step-serenity" className="hover:underline">
-              Step Serenity
-            </Link>
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">Daily Steps</p>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">No steps data yet.</p>
-        </CardContent>
-      </Card>
-    )
+  let targetDate: Date
+
+  if (selectedDate) {
+    // Use provided date
+    targetDate = new Date(selectedDate + 'T00:00:00.000Z')
+  } else {
+    // Get most recent day available
+    const { data: latest } = await (supabase as any)
+      .from('wearable_data')
+      .select('timestamp')
+      .eq('connection_id', conn.id)
+      .eq('metric_type', 'steps')
+      .order('timestamp', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    
+    if (!latest) {
+      return (
+        <Card className="bg-card border shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold text-primary">
+              <Link href="/integrations/step-serenity" className="hover:underline">
+                Step Serenity
+              </Link>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">Daily Steps</p>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">No steps data yet.</p>
+          </CardContent>
+        </Card>
+      )
+    }
+
+    targetDate = new Date(latest.timestamp)
   }
 
-  const day = new Date(latest.timestamp)
-  day.setHours(0, 0, 0, 0)
-  const start = day.toISOString()
-  const end = new Date(day.getTime() + 86400000).toISOString()
+  targetDate.setHours(0, 0, 0, 0)
+  const start = targetDate.toISOString()
+  const end = new Date(targetDate.getTime() + 86400000).toISOString()
 
   const { data: rows } = await (supabase as any)
     .from('wearable_data')
@@ -78,10 +92,10 @@ export default async function StepSerenityWidget() {
       <CardContent>
         {steps ? (
           <Suspense fallback={<p className="text-sm text-muted-foreground">Loading graph…</p>}>
-            <StepBarChart steps={steps} calories={calories} dayLabel={day.toLocaleDateString()} />
+            <StepBarChart steps={steps} calories={calories} dayLabel={targetDate.toLocaleDateString()} />
           </Suspense>
         ) : (
-          <p className="text-sm text-muted-foreground">No steps data for today.</p>
+          <p className="text-sm text-muted-foreground">No steps data for selected day.</p>
         )}
       </CardContent>
     </Card>

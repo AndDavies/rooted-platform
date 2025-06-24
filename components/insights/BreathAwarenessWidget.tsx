@@ -6,7 +6,11 @@ import { Suspense } from 'react'
 import BreathChartToggle from '@/components/insights/BreathChartToggle'
 import type { BreathDataPoint } from '@/components/insights/BreathChart'
 
-export default async function BreathAwarenessWidget() {
+interface BreathAwarenessWidgetProps {
+  selectedDate?: string // YYYY-MM-DD format, optional
+}
+
+export default async function BreathAwarenessWidget({ selectedDate }: BreathAwarenessWidgetProps = {}) {
   const supabase = await createClient()
   const {
     data: { user },
@@ -24,41 +28,49 @@ export default async function BreathAwarenessWidget() {
 
   if (!conn) return null
 
-  // get most recent day available
-  const { data: latestRow } = await (supabase as any)
-    .from('wearable_data')
-    .select('timestamp')
-    .eq('connection_id', conn.id)
-    .eq('metric_type', 'respiration_rate')
-    .order('timestamp', { ascending: false })
-    .limit(1)
-    .maybeSingle()
+  let targetDate: Date
 
-  if (!latestRow) {
-    return (
-      <Card className="bg-card border shadow-md">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-primary">
-            <Link href="/integrations/breath-awareness" className="hover:underline">
-              Breath Awareness
-            </Link>
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">Daily Respiration</p>
-          <time className="text-xs text-muted-foreground" dateTime={latestRow?.timestamp}>
-            {latestRow?.timestamp ? new Date(latestRow.timestamp).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'No data'}
-          </time>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">No respiration data yet.</p>
-        </CardContent>
-      </Card>
-    )
+  if (selectedDate) {
+    // Use provided date
+    targetDate = new Date(selectedDate + 'T00:00:00.000Z')
+  } else {
+    // get most recent day available
+    const { data: latestRow } = await (supabase as any)
+      .from('wearable_data')
+      .select('timestamp')
+      .eq('connection_id', conn.id)
+      .eq('metric_type', 'respiration_rate')
+      .order('timestamp', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (!latestRow) {
+      return (
+        <Card className="bg-card border shadow-md">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold text-primary">
+              <Link href="/integrations/breath-awareness" className="hover:underline">
+                Breath Awareness
+              </Link>
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">Daily Respiration</p>
+            <time className="text-xs text-muted-foreground" dateTime={latestRow?.timestamp}>
+              {latestRow?.timestamp ? new Date(latestRow.timestamp).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'No data'}
+            </time>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">No respiration data yet.</p>
+          </CardContent>
+        </Card>
+      )
+    }
+
+    targetDate = new Date(latestRow.timestamp)
   }
 
-  const latestDate = new Date(latestRow.timestamp)
-  latestDate.setHours(0, 0, 0, 0)
-  const start = latestDate.toISOString()
-  const end = new Date(latestDate.getTime() + 86400000).toISOString()
+  targetDate.setHours(0, 0, 0, 0)
+  const start = targetDate.toISOString()
+  const end = new Date(targetDate.getTime() + 86400000).toISOString()
 
   const { data: dayRows } = await (supabase as any)
     .from('wearable_data')
@@ -118,8 +130,8 @@ export default async function BreathAwarenessWidget() {
           </Link>
         </CardTitle>
         <p className="text-sm text-muted-foreground">Daily Respiration</p>
-        <time className="text-xs text-muted-foreground" dateTime={latestDate.toISOString()}>
-          {latestDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+        <time className="text-xs text-muted-foreground" dateTime={targetDate.toISOString()}>
+          {targetDate.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
         </time>
       </CardHeader>
       <CardContent>
@@ -130,7 +142,7 @@ export default async function BreathAwarenessWidget() {
               hrvData={hrvData}
               sessionRanges={sessionRanges}
               sleepRange={sleepRange}
-              dayLabel={latestDate.toLocaleDateString()}
+              dayLabel={targetDate.toLocaleDateString()}
             />
             {sessionCount > 0 && (
               <div className="mt-2 flex items-center gap-2">

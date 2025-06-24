@@ -11,18 +11,55 @@ import {
 } from "@/components/ui/breadcrumb";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { RiBardLine, RiCalendarLine } from "@remixicon/react";
+import { RiBardLine } from "@remixicon/react";
 import BreathAwarenessWidget from '@/components/insights/BreathAwarenessWidget'
 import StepSerenityWidget from '@/components/insights/StepSerenityWidget'
-import Link from 'next/link';
+import DateNavigation from '@/components/insights/DateNavigation'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: "Insights - Rooted Platform",
   description: "Personalized wellness insights based on your biometrics and activity.",
 };
 
-export default async function InsightsPage() {
+interface PageProps {
+  params: Promise<{ date: string }>
+}
+
+export default async function InsightsDatePage({ params }: PageProps) {
+  const { date: selectedDate } = await params
+
+  // Validate date format (YYYY-MM-DD)
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+  if (!dateRegex.test(selectedDate)) {
+    redirect('/dashboard/insights')
+  }
+
+  // Parse the date more safely
+  const dateParts = selectedDate.split('-')
+  const year = parseInt(dateParts[0], 10)
+  const month = parseInt(dateParts[1], 10) - 1 // Month is 0-indexed
+  const day = parseInt(dateParts[2], 10)
+
+  // Create date object in local timezone
+  const targetDate = new Date(year, month, day)
+  
+  // Check if the date is valid
+  if (isNaN(targetDate.getTime()) || 
+      targetDate.getFullYear() !== year || 
+      targetDate.getMonth() !== month || 
+      targetDate.getDate() !== day) {
+    redirect('/dashboard/insights')
+  }
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  // Prevent navigation beyond current date
+  if (targetDate > today) {
+    redirect('/dashboard/insights')
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -53,16 +90,28 @@ export default async function InsightsPage() {
     connected = !!conn;
 
     if (conn) {
-      // Fetch the latest value for each metric_type
+      // Create UTC timestamps for database queries
+      const startUTC = new Date(year, month, day).toISOString()
+      const endUTC = new Date(year, month, day + 1).toISOString()
+      
       const { data } = await (supabase as any)
-        .rpc('get_latest_metrics', { p_connection_id: conn.id });
-      latestMetrics = (data ?? []) as MetricRow[];
+        .from('wearable_data')
+        .select('metric_type, value, unit, timestamp')
+        .eq('connection_id', conn.id)
+        .gte('timestamp', startUTC)
+        .lt('timestamp', endUTC)
+        .order('timestamp', { ascending: false });
+      
+      // Get latest value for each metric type
+      const metricMap = new Map<string, MetricRow>();
+      (data ?? []).forEach((row: any) => {
+        if (!metricMap.has(row.metric_type)) {
+          metricMap.set(row.metric_type, row);
+        }
+      });
+      latestMetrics = Array.from(metricMap.values());
     }
   }
-
-  // Get today's date for the "View by Date" link
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
 
   return (
     <>
@@ -77,14 +126,21 @@ export default async function InsightsPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">
+                <BreadcrumbLink href="/dashboard/insights">
                   <RiBardLine size={22} aria-hidden="true" />
-                  <span className="sr-only">Dashboard</span>
+                  <span className="sr-only">Insights</span>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Insights</BreadcrumbPage>
+                <BreadcrumbPage>
+                  {targetDate.toLocaleDateString(undefined, { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                  })}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -97,22 +153,22 @@ export default async function InsightsPage() {
           <div>
             <h1 className="text-2xl font-semibold">Personalized Insights</h1>
             <p className="text-sm text-muted-foreground max-w-prose">
-              Below is a live glimpse of your most recent Garmin data.
+              Viewing data for {targetDate.toLocaleDateString(undefined, { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
             </p>
           </div>
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/dashboard/insights/${todayStr}`}>
-              <RiCalendarLine size={16} className="mr-2" />
-              View by Date
-            </Link>
-          </Button>
+          <DateNavigation currentDate={selectedDate} />
         </div>
 
         {/* Breath Awareness line chart */}
-        <BreathAwarenessWidget />
+        <BreathAwarenessWidget selectedDate={selectedDate} />
 
         {/* Step Serenity bar chart */}
-        <StepSerenityWidget />
+        <StepSerenityWidget selectedDate={selectedDate} />
 
         {connected && latestMetrics.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
@@ -133,6 +189,15 @@ export default async function InsightsPage() {
                 </time>
               </article>
             ))}
+          </div>
+        )}
+
+        {connected && latestMetrics.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No data available for this date.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Data may not have been collected yet or the Garmin integration might be still syncing.
+            </p>
           </div>
         )}
       </div>
