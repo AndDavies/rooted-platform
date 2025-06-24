@@ -189,7 +189,6 @@ async function routeToAgent(
 }
 
 // Save conversation to database with enhanced metadata
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function saveConversation(
   userId: string,
   sessionId: string | null,
@@ -197,6 +196,7 @@ async function saveConversation(
   agentResponse: string,
   mode: string,
   metadata: Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any
 ) {
   const startTime = Date.now()

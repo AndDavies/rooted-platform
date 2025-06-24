@@ -15,7 +15,7 @@ export function getSleepTrendTool(userId?: string) {
   return new DynamicTool({
     name: "getSleepTrend",
     description: "Returns a summary of the user's sleep patterns over the past 7 days, including total sleep time, sleep efficiency, and sleep stage analysis.",
-    func: async (_input: string) => {
+    func: async () => {
       try {
         if (!userId) {
           return JSON.stringify({

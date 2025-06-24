@@ -15,7 +15,7 @@ export function getHRVTrendTool(userId?: string) {
   return new DynamicTool({
   name: "getHRVTrend",
     description: "Returns a summary of the user's HRV trend over the past 7 days, including average values, trend direction, and recovery insights.",
-  func: async (_input: string) => {
+  func: async () => {
       try {
         if (!userId) {
           return JSON.stringify({
