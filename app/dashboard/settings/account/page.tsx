@@ -205,7 +205,7 @@ export default function AccountPage() {
         {/* Coming Soon Notice */}
         <div className="rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 text-center">
           <p className="text-muted-foreground">
-            Account management features coming soon! You'll be able to update your profile, 
+            Account management features coming soon! You&apos;ll be able to update your profile, 
             manage data retention, and export your wellness data.
           </p>
         </div>
