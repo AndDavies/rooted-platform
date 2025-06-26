@@ -160,7 +160,7 @@ export async function runRecoveryAgent(
     // Post-process response to ensure proper formatting
     if (response.output && !response.output.includes('Final Answer:')) {
       console.warn(`[Agent] Response missing 'Final Answer:' prefix, auto-correcting...`)
-      response.output = `Final Answer: ${response.output}`
+      response.output = `${response.output}`
     }
 
     // Extract tools used from intermediate steps

@@ -9,8 +9,8 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Rooted Platform - Community Wellness",
-  description: "A community wellness platform focused on the 6 pillars: Breathing, Sleep, Nutrition, Movement, Mindset, and Relaxation",
+  title: "The ROOTED Way - Hybrid AI-Human Wellness Coaching",
+  description: "The future of hybrid AI-Human wellness coaching - A community wellness platform focused on the 6 pillars: Breathing, Sleep, Nutrition, Movement, Mindset, and Relaxation",
 };
 
 export default function RootLayout({

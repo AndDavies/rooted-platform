@@ -165,6 +165,10 @@ export async function POST(request: NextRequest) {
     eventWrappers.push(...payload.wellnessSleep.map((s: any) => ({ wellnessSleep: s, userId: s.userId })))
   }
 
+  if (Array.isArray(payload?.sleeps)) {
+    eventWrappers.push(...payload.sleeps.map((s: any) => ({ sleeps: s, userId: s.userId })))
+  }
+
   if (Array.isArray(payload?.hrv)) {
     eventWrappers.push(...payload.hrv.map((h: any) => ({ hrv: h, userId: h.userId })))
   }
@@ -328,6 +332,43 @@ export async function POST(request: NextRequest) {
       if (s.sleepEndTimeInSeconds !== undefined) {
         totalMetrics++
         if (await insertMetric(connId, 'sleep_end_time', s.sleepEndTimeInSeconds, 'timestamp', timestamp)) successfulInserts++; else failedInserts++
+      }
+    }
+
+    // Sleep data (from 'sleeps' array)
+    if (evt.sleeps) {
+      const s = evt.sleeps
+      const timestamp = s.calendarDate
+
+      if (s.durationInSeconds !== undefined) {
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_total_seconds', s.durationInSeconds, 's', timestamp)) successfulInserts++; else failedInserts++
+      }
+      if (s.deepSleepDurationInSeconds !== undefined) {
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_deep_seconds', s.deepSleepDurationInSeconds, 's', timestamp)) successfulInserts++; else failedInserts++
+      }
+      if (s.remSleepInSeconds !== undefined) {
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_rem_seconds', s.remSleepInSeconds, 's', timestamp)) successfulInserts++; else failedInserts++
+      }
+      if (s.lightSleepDurationInSeconds !== undefined) {
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_light_seconds', s.lightSleepDurationInSeconds, 's', timestamp)) successfulInserts++; else failedInserts++
+      }
+      if (s.awakeDurationInSeconds !== undefined) {
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_awake_seconds', s.awakeDurationInSeconds, 's', timestamp)) successfulInserts++; else failedInserts++
+      }
+      if (s.startTimeInSeconds !== undefined) {
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_start_time', s.startTimeInSeconds, 'timestamp', timestamp)) successfulInserts++; else failedInserts++
+      }
+      // Calculate sleep end time if we have start time and duration
+      if (s.startTimeInSeconds !== undefined && s.durationInSeconds !== undefined) {
+        const sleepEndTime = s.startTimeInSeconds + s.durationInSeconds
+        totalMetrics++
+        if (await insertMetric(connId, 'sleep_end_time', sleepEndTime, 'timestamp', timestamp)) successfulInserts++; else failedInserts++
       }
     }
 

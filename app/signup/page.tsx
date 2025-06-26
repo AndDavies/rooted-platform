@@ -21,7 +21,10 @@ export default async function SignupPage({
             <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gray-900 text-white">
               <Leaf className="h-4 w-4" />
             </div>
-            <span className="font-bold">Rooted Platform</span>
+            <div className="flex flex-col">
+              <span className="font-bold">The ROOTED Way</span>
+              <span className="text-xs text-muted-foreground font-normal">The future of hybrid AI-Human wellness coaching</span>
+            </div>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center">

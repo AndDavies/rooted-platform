@@ -35,7 +35,7 @@ import {
 const data = {
   teams: [
     {
-      name: "Rooted Platform",
+      name: "The ROOTED Way",
       logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
     },
   ],
@@ -66,14 +66,14 @@ const data = {
           icon: RiHeartPulseLine,
         },
         {
+          title: "Burnout",
+          url: "/dashboard/burnout",
+          icon: RiAlarmWarningLine,
+        },
+        {
           title: "Insights",
           url: "/dashboard/insights",
           icon: RiBardLine,
-        },
-        {
-          title: "Burnout Analysis",
-          url: "/dashboard/insights/burnout",
-          icon: RiAlarmWarningLine,
         },
       ],
     },

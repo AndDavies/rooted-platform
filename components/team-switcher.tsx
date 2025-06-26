@@ -53,6 +53,11 @@ export function TeamSwitcher({
                 <span className="truncate font-medium">
                   {activeTeam?.name ?? "Select a Team"}
                 </span>
+                {activeTeam?.name === "The ROOTED Way" && (
+                  <span className="text-xs text-muted-foreground/80 truncate">
+                    The future of hybrid AI-Human wellness coaching
+                  </span>
+                )}
               </div>
               <RiExpandUpDownLine
                 className="ms-auto text-muted-foreground/60"

@@ -20,7 +20,10 @@ export function AuthAside() {
           <div className="flex h-10 w-10 items-center justify-center rounded-md bg-white text-neutral-900">
             <Leaf className="h-5 w-5" />
           </div>
-          <h2 className="text-3xl font-bold tracking-tight">Rooted Platform</h2>
+          <div className="text-left">
+            <h2 className="text-3xl font-bold tracking-tight">The ROOTED Way</h2>
+            <p className="text-sm text-gray-300/80 font-normal">The future of hybrid AI-Human wellness coaching</p>
+          </div>
         </div>
 
         <p className="text-lg font-light text-gray-300">
