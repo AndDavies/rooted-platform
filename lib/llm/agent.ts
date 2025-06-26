@@ -2,8 +2,7 @@
 import { ChatOpenAI } from "@langchain/openai"
 import { AgentExecutor, createReactAgent } from "langchain/agents"
 import { PromptTemplate } from "@langchain/core/prompts"
-import { getHRVTrendTool } from "./tools/getHRVTrend"
-import { getSleepTrendTool } from "./tools/getSleepTrend"
+import { getAllWellnessTools } from "./tools"
 import { recoveryCoachSystemMessage } from "@/lib/prompts/recoveryCoachPrompt"
 
 // Types for better error handling and response structure
@@ -45,16 +44,13 @@ export async function createRecoveryAgent(userId?: string) {
     console.log(`[Agent] Creating recovery agent for user: ${userId || 'anonymous'}`)
 
     const model = new ChatOpenAI({
-      model: "gpt-4-turbo-preview",
-      temperature: 0.7,
+      model: "gpt-4o-mini",
+      temperature: 0.3, // Lower temperature for more consistent formatting
       streaming: false,
       openAIApiKey: process.env.OPENAI_API_KEY,
     })
 
-    const tools = [
-      getHRVTrendTool(userId),
-      getSleepTrendTool(userId)
-    ]
+    const tools = getAllWellnessTools(userId)
 
     console.log(`[Agent] Tools loaded: ${tools.map(t => t.name).join(', ')}`)
 
@@ -64,6 +60,10 @@ export async function createRecoveryAgent(userId?: string) {
 You have access to the following tools:
 
 {tools}
+
+CRITICAL: You MUST follow this exact format for ALL responses. Do not deviate from this format under any circumstances.
+
+If the user input is a simple acknowledgment like "yes", "ok", "thanks", or "please", treat it as a request to continue the conversation and provide a helpful response using the Final Answer format.
 
 Use the following format:
 
@@ -75,6 +75,12 @@ Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question
+
+IMPORTANT FORMATTING RULES:
+1. If you don't need tools to answer the question, skip the Action/Action Input/Observation steps and go directly to "Final Answer:"
+2. Every response MUST end with "Final Answer:" followed by your complete response
+3. Never respond with just conversational text - always use the format above
+4. For simple acknowledgments, greetings, or clarifications, provide a helpful recovery coaching response after "Final Answer:"
 
 Begin!
 
@@ -151,6 +157,12 @@ export async function runRecoveryAgent(
       input: fullPrompt,
     })
 
+    // Post-process response to ensure proper formatting
+    if (response.output && !response.output.includes('Final Answer:')) {
+      console.warn(`[Agent] Response missing 'Final Answer:' prefix, auto-correcting...`)
+      response.output = `Final Answer: ${response.output}`
+    }
+
     // Extract tools used from intermediate steps
     if (response.intermediateSteps) {
       response.intermediateSteps.forEach((step: AgentStep) => {
@@ -203,6 +215,9 @@ export async function runRecoveryAgent(
         userFriendlyMessage = "Your message is too long. Please try a shorter question."
       } else if (error.message.includes("empty")) {
         userFriendlyMessage = "Please enter a message to chat with me."
+      } else if (error.message.includes("OUTPUT_PARSING_FAILURE") || error.message.includes("parsing") || error.message.includes("format")) {
+        userFriendlyMessage = "I had trouble understanding your request. Could you please rephrase your question more specifically?"
+        console.warn(`[Agent] Output parsing failure detected for input: "${userMessage}"`)
       }
     }
 
