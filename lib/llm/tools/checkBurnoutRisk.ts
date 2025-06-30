@@ -29,7 +29,7 @@ interface BurnoutRiskOutput {
 export function checkBurnoutRiskTool(userId?: string) {
   return new DynamicTool({
     name: "checkBurnoutRisk",
-    description: "Evaluates burnout risk by analyzing patterns in HRV, sleep quality, stress indicators, and recovery metrics to provide early warning signs and prevention strategies. Returns both structured data and natural language summary.",
+    description: "Evaluates burnout risk by analyzing patterns in HRV, sleep quality, stress indicators, and recovery metrics to provide early warning signs and prevention strategies. Returns both structured data and natural language summary. This tool requires no input parameters - just call it to get the user's burnout risk assessment.",
     func: async () => {
       try {
         if (!userId) {

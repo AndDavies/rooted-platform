@@ -35,7 +35,7 @@ export default function ChatInput({ onSendMessage, isLoading = false }: ChatInpu
 
   return (
     <div className="p-5">
-      <div className="flex items-center gap-2 bg-gray-50 rounded-2xl border border-gray-300/60 shadow-sm hover:shadow-md hover:border-gray-400/60 transition-all duration-200 p-3">
+      <div className="flex items-center gap-2 border-gray-300/60 rounded-full border border-white shadow-sm hover:shadow-md hover:border-gray-400/60 transition-all duration-200 p-3">
         {/* Message Input */}
         <Input
           value={message}
@@ -43,7 +43,7 @@ export default function ChatInput({ onSendMessage, isLoading = false }: ChatInpu
           onKeyPress={handleKeyPress}
           placeholder="Ask anything…"
           disabled={isLoading}
-          className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-500 text-gray-800 font-medium"
+          className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-500 text-gray-100 font-medium"
         />
         
         {/* Action Buttons */}

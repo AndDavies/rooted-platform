@@ -16,6 +16,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { RiHeartPulseLine, RiArrowUpLine, RiArrowDownLine, RiSubtractLine } from "@remixicon/react"
 import { createClient } from "@/utils/supabase/client"
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 // Types for our recovery data
 interface RecoveryMetric {
@@ -613,10 +615,25 @@ export default function RecoveryPage() {
                 <span className="text-sm text-muted-foreground">Analyzing your recovery data...</span>
               </div>
             ) : (
-              <div className="prose prose-sm max-w-none">
-                <p className="text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap">
-                  {aiInsight || "Your recovery data is being analyzed. Please check back shortly for personalized insights."}
-                </p>
+              <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-headings:font-semibold prose-strong:text-gray-900 prose-strong:font-semibold prose-ul:my-2 prose-li:my-1 prose-p:my-2 prose-p:leading-relaxed">
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({children}) => <h1 className="text-lg font-semibold text-gray-900 mb-2 mt-3 first:mt-0">{children}</h1>,
+                    h2: ({children}) => <h2 className="text-base font-semibold text-gray-900 mb-2 mt-3 first:mt-0">{children}</h2>,
+                    h3: ({children}) => <h3 className="text-sm font-semibold text-gray-900 mb-1 mt-2 first:mt-0">{children}</h3>,
+                    p: ({children}) => <p className="text-sm leading-relaxed text-muted-foreground mb-2 last:mb-0">{children}</p>,
+                    ul: ({children}) => <ul className="text-sm list-disc list-inside space-y-1 mb-2 text-muted-foreground">{children}</ul>,
+                    ol: ({children}) => <ol className="text-sm list-decimal list-inside space-y-1 mb-2 text-muted-foreground">{children}</ol>,
+                    li: ({children}) => <li className="text-sm text-muted-foreground">{children}</li>,
+                    strong: ({children}) => <strong className="font-semibold text-gray-900">{children}</strong>,
+                    em: ({children}) => <em className="italic text-gray-700">{children}</em>,
+                    code: ({children}) => <code className="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
+                    blockquote: ({children}) => <blockquote className="border-l-4 border-gray-300 pl-3 italic text-gray-600 my-2">{children}</blockquote>
+                  }}
+                                  >
+                    {(aiInsight || "Your recovery data is being analyzed. Please check back shortly for personalized insights.").replace(/^Final Answer:\s*/, "")}
+                  </ReactMarkdown>
               </div>
             )}
             <Button 

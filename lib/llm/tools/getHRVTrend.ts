@@ -16,7 +16,7 @@ interface ProcessedDataPoint {
 export function getHRVTrendTool(userId?: string) {
   return new DynamicTool({
     name: "getHRVTrend",
-    description: "Analyzes user's HRV (Heart Rate Variability) trends over the past 7-14 days, including comparison periods, resting heart rate correlation, and recovery insights with actionable recommendations.",
+    description: "Analyzes user's HRV (Heart Rate Variability) trends over the past 7-14 days, including comparison periods, resting heart rate correlation, and recovery insights with actionable recommendations. This tool requires no input parameters - just call it to get the user's HRV analysis.",
     func: async () => {
       try {
         if (!userId) {

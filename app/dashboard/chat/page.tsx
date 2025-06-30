@@ -116,20 +116,21 @@ export default function ChatPage() {
       {/* Content with enhanced background */}
       <div className="flex flex-col gap-6 py-6 lg:py-8 h-[calc(100vh-4rem)] ">
         <div className="px-1">
-          <h1 className="text-2xl font-semibold tracking-tight">AI Wellness Coach</h1>
-          <p className="text-sm text-muted-foreground max-w-prose">
-            Chat with Zeger, your personal recovery and wellness coach. Ask about your biometric data, wellness insights, or general health questions.
-          </p>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-100 mb-2">Your Smart Recovery Coach</h1>
+<p className="text-base text-muted-foreground max-w-prose">
+  Zeger turns your wearable data into clarity. Ask about HRV, sleep, stress, or burnout — and get real insights, not just numbers.
+</p>
+
         </div>
 
         {/* Enhanced Chat Container */}
         <div className="flex-1 flex flex-col min-h-0 mx-1">
-          <div className="flex-1 flex flex-col min-h-0 rounded-xl border border-border/60 bg-gray-50/80 shadow-lg shadow-gray-900/5 overflow-hidden">
+          <div className="flex-1 flex flex-col min-h-0 rounded-xl border border-border/60 border-gray-300/60 shadow-lg shadow-gray-900/5 overflow-hidden">
             {/* Chat Messages */}
             <ChatLog messages={messages} />
             
             {/* Chat Input with enhanced separator */}
-            <div className="border-t border-border/40 bg-gray-100/40 backdrop-blur-sm">
+            <div className="border-t border-border/40 bg-transparent backdrop-blur-sm">
               <ChatInput 
                 onSendMessage={handleSendMessage}
                 isLoading={isLoading}

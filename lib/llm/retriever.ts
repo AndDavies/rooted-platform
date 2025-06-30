@@ -30,7 +30,7 @@ const getVectorStore = () => {
   const embeddings = getEmbeddings()
   
   return new SupabaseVectorStore(embeddings, {
-    client,
+  client,
     tableName: "wellness_embeddings", // Your pgvector table name
     queryName: "match_documents",     // RPC function for similarity search
   })
@@ -54,7 +54,7 @@ export async function searchWellnessDocs(
     }
     
     console.log(`[Retriever] Found ${results.length} relevant documents`)
-    
+
     // Combine and format the results
     const combinedContent = results
       .map((doc: Document, index: number) => {

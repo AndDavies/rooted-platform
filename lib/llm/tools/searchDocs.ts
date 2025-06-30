@@ -4,18 +4,17 @@ import { searchWellnessDocs } from "@/lib/llm/retriever"
 export const createSearchDocsTool = (userId?: string) => {
   return new DynamicTool({
     name: "searchDocs",
-    description: `Search through embedded wellness documents, research papers, protocols, and expert insights.
+    description: `Use this tool when the user asks for general wellness education, supplement recommendations, stress-reduction strategies, or scientific explanations that are not specific to their biometric data.
+
+        This tool performs a semantic vector search on the embedded wellness knowledge base, which includes:
+        - Supplement research and nutritional protocols
+        - HRV, sleep science, and recovery principles
+        - Mindfulness, stress regulation, and emotional health strategies
+        - Cellular health, longevity, and functional medicine insights
+        - Expert-curated health content and academic references
+        
+        Only use this tool when the user seeks an explanation, insight, or evidence-based information beyond their personal data. Returns summarized document excerpts with source details, for use in your final answer.`,
     
-    Use this tool to find evidence-based information about:
-    - Supplement research and recommendations
-    - HRV, sleep, and recovery protocols
-    - Stress management techniques
-    - Nutrition and wellness practices
-    - Scientific studies and clinical findings
-    - Recovery strategies and methodologies
-    
-    Input should be a specific search query about wellness, recovery, or health topics.
-    Returns relevant document excerpts with source information.`,
     
     func: async (query: string) => {
       try {

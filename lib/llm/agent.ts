@@ -44,8 +44,8 @@ export async function createRecoveryAgent(userId?: string) {
     console.log(`[Agent] Creating recovery agent for user: ${userId || 'anonymous'}`)
 
     const model = new ChatOpenAI({
-      model: "gpt-4o-mini",
-      temperature: 0.3, // Lower temperature for more consistent formatting
+      model: "gpt-4o",
+      temperature: 0.1, // Very low temperature for consistent behavior and to prevent loops
       streaming: false,
       openAIApiKey: process.env.OPENAI_API_KEY,
     })
@@ -63,24 +63,28 @@ You have access to the following tools:
 
 CRITICAL: You MUST follow this exact format for ALL responses. Do not deviate from this format under any circumstances.
 
-If the user input is a simple acknowledgment like "yes", "ok", "thanks", or "please", treat it as a request to continue the conversation and provide a helpful response using the Final Answer format.
-
 Use the following format:
 
 Question: the input question you must answer
 Thought: you should always think about what to do
 Action: the action to take, should be one of [{tool_names}]
-Action Input: the input to the action
+Action Input: the input to the action (use empty string "" if the tool needs no input)
 Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat N times)
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question
 
-IMPORTANT FORMATTING RULES:
+IMPORTANT RULES:
 1. If you don't need tools to answer the question, skip the Action/Action Input/Observation steps and go directly to "Final Answer:"
 2. Every response MUST end with "Final Answer:" followed by your complete response
-3. Never respond with just conversational text - always use the format above
-4. For simple acknowledgments, greetings, or clarifications, provide a helpful recovery coaching response after "Final Answer:"
+3. After getting a successful tool observation that answers the user's question, immediately proceed to "Final Answer:" - do NOT call the same tool again
+4. For tools that need no input, use an empty string "" as the Action Input
+5. If a tool gives you the information needed to answer the question, stop using tools and provide the Final Answer
+6. Never call the same tool multiple times with the same input
+7. CRITICAL: After ONE successful tool call that provides data, you MUST immediately proceed to "Final Answer:" and provide your response. Do not call any more tools.
+8. If you receive a tool observation with data, that is your signal to stop and give the Final Answer
+9. STOP IMMEDIATELY after any tool gives you data - do not call tools again
+10. If you see ANY tool observation that contains data, write "Final Answer:" next
 
 Begin!
 
@@ -97,8 +101,9 @@ Thought:{agent_scratchpad}`)
       agent,
       tools,
       verbose: process.env.NODE_ENV === "development",
-      maxIterations: 3,
+      maxIterations: 4, // Reduced to prevent loops, should be enough for most queries
       returnIntermediateSteps: true, // For debugging and logging
+      handleParsingErrors: true, // Better error handling
     })
 
     const duration = Date.now() - startTime
@@ -157,11 +162,8 @@ export async function runRecoveryAgent(
       input: fullPrompt,
     })
 
-    // Post-process response to ensure proper formatting
-    if (response.output && !response.output.includes('Final Answer:')) {
-      console.warn(`[Agent] Response missing 'Final Answer:' prefix, auto-correcting...`)
-      response.output = `${response.output}`
-    }
+    // The agent should naturally include "Final Answer:" but if it doesn't, that's fine
+    // The UI will handle cleaning up the display format
 
     // Extract tools used from intermediate steps
     if (response.intermediateSteps) {
