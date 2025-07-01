@@ -87,8 +87,8 @@ export default function ChatPage() {
   }
 
   return (
-    <>
-      {/* Header */}
+    <div className="flex flex-col h-screen">
+      {/* Header - Fixed height */}
       <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/60">
         <div className="flex flex-1 items-center gap-2 px-3">
           <SidebarTrigger className="-ms-4" />
@@ -113,32 +113,32 @@ export default function ChatPage() {
         </div>
       </header>
 
-      {/* Content with enhanced background */}
-      <div className="flex flex-col gap-6 py-6 lg:py-8 h-[calc(100vh-4rem)] ">
-        <div className="px-1">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-100 mb-2">Your Smart Recovery Coach</h1>
-<p className="text-base text-muted-foreground max-w-prose">
-  Zeger turns your wearable data into clarity. Ask about HRV, sleep, stress, or burnout — and get real insights, not just numbers.
-</p>
-
+      {/* Main content area - takes remaining height */}
+      <div className="flex-1 flex flex-col min-h-0 p-4 lg:p-6">
+        {/* Header section - fixed height */}
+        <div className="mb-4 lg:mb-6">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-100 mb-2">Your Smart Recovery Coach</h1>
+          <p className="text-base text-muted-foreground max-w-prose">
+            Zeger turns your wearable data into clarity. Ask about HRV, sleep, stress, or burnout — and get real insights, not just numbers.
+          </p>
         </div>
 
-        {/* Enhanced Chat Container */}
-        <div className="flex-1 flex flex-col min-h-0 mx-1">
-          <div className="flex-1 flex flex-col min-h-0 rounded-xl border border-border/60 border-gray-300/60 shadow-lg shadow-gray-900/5 overflow-hidden">
-            {/* Chat Messages */}
+        {/* Chat Container - takes remaining space */}
+        <div className="flex-1 flex flex-col min-h-0 rounded-xl border border-border/60 border-gray-300/60 shadow-lg shadow-gray-900/5 overflow-hidden">
+          {/* Chat Messages - scrollable area */}
+          <div className="flex-1 min-h-0">
             <ChatLog messages={messages} />
-            
-            {/* Chat Input with enhanced separator */}
-            <div className="border-t border-border/40 bg-transparent backdrop-blur-sm">
-              <ChatInput 
-                onSendMessage={handleSendMessage}
-                isLoading={isLoading}
-              />
-            </div>
+          </div>
+          
+          {/* Chat Input - always visible at bottom */}
+          <div className="shrink-0 border-t border-border/40 bg-transparent backdrop-blur-sm">
+            <ChatInput 
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 } 

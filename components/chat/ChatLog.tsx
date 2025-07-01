@@ -21,43 +21,41 @@ export default function ChatLog({ messages }: ChatLogProps) {
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="h-full flex items-center justify-center p-8">
         <div className="text-center py-8 px-4">
           <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-4">
             <Bot size={24} className="text-white" />
           </div>
           <h3 className="text-xl font-semibold text-gray-100 mb-3">Meet Your AI Wellness Coach</h3>
 
-<p className="text-base text-gray-100 max-w-md mx-auto mb-4">
-  Hi! I&apos;m <strong>Zeger</strong> — your intelligent, personalized recovery and wellness coach. I’ve been trained on 
-  trusted medical journals, clinical research, and years of holistic wellness knowledge to help you interpret your wearable data 
-  and truly understand what it means for your stress, sleep, energy, and recovery.
-</p>
+          <p className="text-base text-gray-100 max-w-md mx-auto mb-4">
+            Hi! I&apos;m <strong>Zeger</strong> — your intelligent, personalized recovery and wellness coach. I've been trained on 
+            trusted medical journals, clinical research, and years of holistic wellness knowledge to help you interpret your wearable data 
+            and truly understand what it means for your stress, sleep, energy, and recovery.
+          </p>
 
-<p className="text-sm text-gray-100 mb-2">
-  You can ask me things like:
-</p>
+          <p className="text-sm text-gray-100 mb-2">
+            You can ask me things like:
+          </p>
 
-<ul className="list-disc list-inside text-sm text-gray-100 space-y-1 mb-4">
-  <li><em>“How’s my recovery this week based on my HRV and sleep?”</em></li>
-  <li><em>“Am I at risk of burnout right now?”</em></li>
-  <li><em>“Why is my stress score high, and what can I do about it?”</em></li>
-  <li><em>“How does deep sleep affect my recovery?”</em></li>
-  <li><em>“Can you give me a recovery plan for the next 3 days?”</em></li>
-</ul>
+          <ul className="list-disc list-inside text-sm text-gray-100 space-y-1 mb-4">
+            <li><em>"How's my recovery this week based on my HRV and sleep?"</em></li>
+            <li><em>"Am I at risk of burnout right now?"</em></li>
+            <li><em>"Why is my stress score high, and what can I do about it?"</em></li>
+            <li><em>"How does deep sleep affect my recovery?"</em></li>
+            <li><em>"Can you give me a recovery plan for the next 3 days?"</em></li>
+          </ul>
 
-<p className="text-sm text-gray-100">
-  My goal is to help you make sense of your data — and guide you toward better energy, balance, and resilience.
-</p>
-
-
+          <p className="text-sm text-gray-100">
+            My goal is to help you make sense of your data — and guide you toward better energy, balance, and resilience.
+          </p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+    <div className="h-full overflow-y-auto p-6 space-y-6">
       {messages.map((message, index) => (
         <div
           key={index}
