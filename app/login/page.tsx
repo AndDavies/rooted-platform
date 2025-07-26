@@ -1,41 +1,39 @@
-import { Leaf } from "lucide-react"
-import { LoginForm } from "../../components/login-form"
-import { AuthAside } from "../../components/auth-aside"
-import Link from "next/link"
+import { AuthAside } from "@/components/auth-aside"
+import { LoginForm } from "@/components/login-form"
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ message?: string }>
-}) {
-  const { message } = await searchParams
-  
+export default function LoginPage() {
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <Link href="/" className="flex items-center gap-2 font-bold">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gray-900 text-white">
-              <Leaf className="h-4 w-4" />
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
+      <div className="flex items-center justify-center p-6">
+        <div className="w-full max-w-sm space-y-6">
+          <div className="flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5Z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold">The ROOTED Way</span>
-              <span className="text-xs text-muted-foreground font-normal">The future of hybrid AI-Human wellness coaching</span>
-            </div>
-          </Link>
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-sm">
-            {message && (
-              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-sm text-red-600 font-medium">{message}</p>
-              </div>
-            )}
-            <LoginForm />
+            <span className="font-semibold">The ROOTED Way</span>
           </div>
+          <div className="space-y-2 text-center">
+            <h1 className="text-2xl font-bold">Welcome back</h1>
+            <p className="text-muted-foreground">
+              Enter your credentials to access your account
+            </p>
+          </div>
+          <LoginForm />
         </div>
       </div>
-      {/* Auth marketing side panel */}
       <AuthAside />
     </div>
   )

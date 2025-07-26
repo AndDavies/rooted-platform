@@ -13,8 +13,8 @@ export function LoginForm({
     <div className="flex flex-col gap-6">
       <form className={cn("flex flex-col gap-6", className)} {...props} action={login}>
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-2xl font-bold">Login to your account</h1>
-          <p className="text-sm text-gray-600">
+          <h1 className="text-2xl font-bold text-foreground">Login to your account</h1>
+          <p className="text-sm text-muted-foreground">
             Enter your email below to login to your account
           </p>
         </div>
@@ -28,7 +28,7 @@ export function LoginForm({
               <Label htmlFor="password">Password</Label>
               <Link
                 href="/forgot-password"
-                className="ml-auto text-sm underline-offset-4 hover:underline text-blue-600"
+                className="ml-auto text-sm underline-offset-4 hover:underline text-primary"
               >
                 Forgot your password?
               </Link>
@@ -41,8 +41,8 @@ export function LoginForm({
         </div>
       </form>
       
-      <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-gray-200">
-        <span className="relative z-10 bg-white px-2 text-gray-600">
+      <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+        <span className="relative z-10 bg-background px-2 text-muted-foreground">
           Or continue with
         </span>
       </div>
@@ -58,8 +58,8 @@ export function LoginForm({
       </Button>
       
       <div className="text-center text-sm">
-        <span className="text-gray-600">Don&apos;t have an account? </span>
-        <Link href="/signup" className="underline underline-offset-4 font-medium text-blue-600">
+        <span className="text-muted-foreground">Don&apos;t have an account? </span>
+        <Link href="/signup" className="underline underline-offset-4 font-medium text-primary">
           Sign up
         </Link>
       </div>

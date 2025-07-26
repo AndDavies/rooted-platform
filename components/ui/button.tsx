@@ -10,16 +10,22 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "bg-emerald-green text-white shadow-xs hover:bg-emerald-green/90 focus-visible:ring-emerald-green/20",
+        wellness:
+          "bg-maximum-yellow text-charcoal-ash shadow-xs hover:bg-maximum-yellow/90 focus-visible:ring-maximum-yellow/20",
+        recovery:
+          "bg-herbal-olive text-white shadow-xs hover:bg-herbal-olive/90 focus-visible:ring-herbal-olive/20",
+        stress:
+          "bg-warm-clay text-white shadow-xs hover:bg-warm-clay/90 focus-visible:ring-warm-clay/20",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20",
+          "bg-dark-pastel-red text-white shadow-xs hover:bg-dark-pastel-red/90 focus-visible:ring-dark-pastel-red/20",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-emerald-green bg-transparent text-emerald-green shadow-xs hover:bg-emerald-green/10 hover:text-emerald-green focus-visible:ring-emerald-green/20",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-misty-sage text-white shadow-xs hover:bg-misty-sage/90 focus-visible:ring-misty-sage/20",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "hover:bg-papaya-whip hover:text-charcoal-ash focus-visible:ring-emerald-green/20",
+        link: "text-emerald-green underline-offset-4 hover:underline",
       },
       size: {
         default: "h-9 px-5 py-2",
@@ -35,25 +41,23 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
+type ButtonProps = React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot : "button"
+  }
 
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
-}
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        ref={ref}
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = "Button";
 
 export { Button, buttonVariants }

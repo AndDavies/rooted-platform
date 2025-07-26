@@ -45,7 +45,7 @@ export default function NutritionPage() {
       </header>
 
       {/* Content */}
-      <div className="flex flex-col gap-6 py-6 lg:py-8">
+      <div className="flex flex-col gap-6 py-6 lg:py-8 px-6">
         <div>
           <h1 className="text-2xl font-semibold">Nutrition Guidance</h1>
           <p className="text-sm text-muted-foreground max-w-prose">

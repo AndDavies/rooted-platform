@@ -52,7 +52,7 @@ export default function Page() {
         </div>
       </header>
       
-      <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">
+      <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-6 lg:py-8 px-6">
         {/* Page intro */}
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-1">

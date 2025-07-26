@@ -55,18 +55,18 @@ interface RecoveryData {
 
 function TrendIcon({ change, status }: { change: number; status: string }) {
   if (status === 'improving') {
-    return <RiArrowUpLine className="h-4 w-4 text-green-500" />
+    return <RiArrowUpLine className="h-4 w-4 text-emerald-green" />
   } else if (status === 'declining') {
-    return <RiArrowDownLine className="h-4 w-4 text-red-500" />
+    return <RiArrowDownLine className="h-4 w-4 text-dark-pastel-red" />
   }
-  return <RiSubtractLine className="h-4 w-4 text-gray-500" />
+  return <RiSubtractLine className="h-4 w-4 text-misty-sage" />
 }
 
 function TrendBadge({ status }: { status: string }) {
   const variants = {
-    improving: 'bg-green-100 text-green-800 border-green-200',
-    declining: 'bg-red-100 text-red-800 border-red-200',
-    stable: 'bg-gray-100 text-gray-800 border-gray-200'
+    improving: 'bg-emerald-green/10 text-emerald-green border-emerald-green/20',
+    declining: 'bg-dark-pastel-red/10 text-dark-pastel-red border-dark-pastel-red/20',
+    stable: 'bg-misty-sage/10 text-misty-sage border-misty-sage/20'
   }
   
   return (
@@ -353,7 +353,7 @@ export default function RecoveryPage() {
         <div className="flex-1 flex items-center justify-center p-8">
           <Card className="max-w-md">
             <CardHeader>
-              <CardTitle className="text-red-600">Unable to Load Recovery Data</CardTitle>
+              <CardTitle className="text-destructive">Unable to Load Recovery Data</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4">{error}</p>
@@ -429,7 +429,7 @@ export default function RecoveryPage() {
                     7d avg: {recoveryData.sevenDayAvg.hrv ? `${recoveryData.sevenDayAvg.hrv}ms` : '--'}
                   </span>
                   {recoveryData.trends.hrv.change !== 0 && (
-                    <span className={`text-xs ${recoveryData.trends.hrv.status === 'improving' ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`text-xs ${recoveryData.trends.hrv.status === 'improving' ? 'text-emerald-green' : 'text-dark-pastel-red'}`}>
                       {recoveryData.trends.hrv.change > 0 ? '+' : ''}{recoveryData.trends.hrv.change}%
                     </span>
                   )}
@@ -451,7 +451,7 @@ export default function RecoveryPage() {
                     7d avg: {recoveryData.sevenDayAvg.rhr ? `${recoveryData.sevenDayAvg.rhr} bpm` : '--'}
                   </span>
                   {recoveryData.trends.rhr.change !== 0 && (
-                    <span className={`text-xs ${recoveryData.trends.rhr.status === 'improving' ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`text-xs ${recoveryData.trends.rhr.status === 'improving' ? 'text-emerald-green' : 'text-dark-pastel-red'}`}>
                       {recoveryData.trends.rhr.change > 0 ? '+' : ''}{recoveryData.trends.rhr.change}%
                     </span>
                   )}
@@ -473,7 +473,7 @@ export default function RecoveryPage() {
                     7d avg: {recoveryData.sevenDayAvg.totalSleep ? `${recoveryData.sevenDayAvg.totalSleep}h` : '--'}
                   </span>
                   {recoveryData.trends.totalSleep.change !== 0 && (
-                    <span className={`text-xs ${recoveryData.trends.totalSleep.status === 'improving' ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`text-xs ${recoveryData.trends.totalSleep.status === 'improving' ? 'text-emerald-green' : 'text-dark-pastel-red'}`}>
                       {recoveryData.trends.totalSleep.change > 0 ? '+' : ''}{recoveryData.trends.totalSleep.change}%
                     </span>
                   )}
@@ -495,7 +495,7 @@ export default function RecoveryPage() {
                     7d avg: {recoveryData.sevenDayAvg.stress ? `${recoveryData.sevenDayAvg.stress}/100` : '--'}
                   </span>
                   {recoveryData.trends.stress.change !== 0 && (
-                    <span className={`text-xs ${recoveryData.trends.stress.status === 'improving' ? 'text-green-600' : 'text-red-600'}`}>
+                    <span className={`text-xs ${recoveryData.trends.stress.status === 'improving' ? 'text-emerald-green' : 'text-dark-pastel-red'}`}>
                       {recoveryData.trends.stress.change > 0 ? '+' : ''}{recoveryData.trends.stress.change}%
                     </span>
                   )}
@@ -514,7 +514,7 @@ export default function RecoveryPage() {
                 <CardTitle>Recovery Patterns Over Time</CardTitle>
                 <CardDescription>Track your recovery metrics over time</CardDescription>
               </div>
-              <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+              <div className="flex gap-1 bg-muted rounded-lg p-1">
                 <Button 
                   variant={selectedPeriod === "7d" ? "default" : "ghost"}
                   size="sm"
@@ -544,35 +544,35 @@ export default function RecoveryPage() {
               {/* Time series data display */}
               <div className="grid gap-3">
                 {recoveryData.timeSeries.map((day, index) => (
-                  <div key={day.date} className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+                  <div key={day.date} className="border border-border rounded-lg p-4 bg-card shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
-                        <span className="text-sm font-semibold text-gray-900">
+                        <span className="text-sm font-semibold text-foreground">
                           {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                         </span>
                       </div>
                       <div className="flex gap-6 text-sm">
                         {day.hrv && (
                           <div className="text-center">
-                            <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">HRV</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">HRV</div>
                             <div className="font-semibold text-purple-700">{day.hrv}ms</div>
                           </div>
                         )}
                         {day.rhr && (
                           <div className="text-center">
-                            <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">RHR</div>
-                            <div className="font-semibold text-red-600">{day.rhr} bpm</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">RHR</div>
+<div className="font-semibold text-dark-pastel-red">{day.rhr} bpm</div>
                           </div>
                         )}
                         {day.sleep && (
                           <div className="text-center">
-                            <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Sleep</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Sleep</div>
                             <div className="font-semibold text-blue-700">{day.sleep}h</div>
                           </div>
                         )}
                         {!day.hrv && !day.rhr && !day.sleep && (
-                          <div className="text-gray-400 italic text-sm">No data available</div>
+                          <div className="text-muted-foreground italic text-sm">No data available</div>
                         )}
                       </div>
                     </div>
@@ -581,20 +581,20 @@ export default function RecoveryPage() {
               </div>
               
               {/* Data Legend */}
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h4 className="text-sm font-medium text-gray-900 mb-3">Metric Guide</h4>
+              <div className="mt-6 p-4 bg-muted rounded-lg border border-border">
+<h4 className="text-sm font-medium text-foreground mb-3">Metric Guide</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-purple-700 rounded-full"></div>
-                    <span className="text-gray-700"><strong>HRV:</strong> Heart Rate Variability - Higher values indicate better recovery</span>
+                    <span className="text-foreground"><strong>HRV:</strong> Heart Rate Variability - Higher values indicate better recovery</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-                    <span className="text-gray-700"><strong>RHR:</strong> Resting Heart Rate - Lower values indicate better fitness</span>
+                    <span className="text-foreground"><strong>RHR:</strong> Resting Heart Rate - Lower values indicate better fitness</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-blue-700 rounded-full"></div>
-                    <span className="text-gray-700"><strong>Sleep:</strong> Total sleep duration - 7-9 hours recommended</span>
+                    <span className="text-foreground"><strong>Sleep:</strong> Total sleep duration - 7-9 hours recommended</span>
                   </div>
                 </div>
               </div>
@@ -615,21 +615,21 @@ export default function RecoveryPage() {
                 <span className="text-sm text-muted-foreground">Analyzing your recovery data...</span>
               </div>
             ) : (
-              <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-headings:font-semibold prose-strong:text-gray-900 prose-strong:font-semibold prose-ul:my-2 prose-li:my-1 prose-p:my-2 prose-p:leading-relaxed">
+              <div className="prose prose-sm max-w-none prose-headings:text-foreground prose-headings:font-semibold prose-strong:text-foreground prose-strong:font-semibold prose-ul:my-2 prose-li:my-1 prose-p:my-2 prose-p:leading-relaxed">
                 <ReactMarkdown 
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    h1: ({children}) => <h1 className="text-lg font-semibold text-gray-900 mb-2 mt-3 first:mt-0">{children}</h1>,
-                    h2: ({children}) => <h2 className="text-base font-semibold text-gray-900 mb-2 mt-3 first:mt-0">{children}</h2>,
-                    h3: ({children}) => <h3 className="text-sm font-semibold text-gray-900 mb-1 mt-2 first:mt-0">{children}</h3>,
+                    h1: ({children}) => <h1 className="text-lg font-semibold text-foreground mb-2 mt-3 first:mt-0">{children}</h1>,
+h2: ({children}) => <h2 className="text-base font-semibold text-foreground mb-2 mt-3 first:mt-0">{children}</h2>,
+h3: ({children}) => <h3 className="text-sm font-semibold text-foreground mb-1 mt-2 first:mt-0">{children}</h3>,
                     p: ({children}) => <p className="text-sm leading-relaxed text-muted-foreground mb-2 last:mb-0">{children}</p>,
                     ul: ({children}) => <ul className="text-sm list-disc list-inside space-y-1 mb-2 text-muted-foreground">{children}</ul>,
                     ol: ({children}) => <ol className="text-sm list-decimal list-inside space-y-1 mb-2 text-muted-foreground">{children}</ol>,
                     li: ({children}) => <li className="text-sm text-muted-foreground">{children}</li>,
-                    strong: ({children}) => <strong className="font-semibold text-gray-900">{children}</strong>,
-                    em: ({children}) => <em className="italic text-gray-700">{children}</em>,
-                    code: ({children}) => <code className="bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
-                    blockquote: ({children}) => <blockquote className="border-l-4 border-gray-300 pl-3 italic text-gray-600 my-2">{children}</blockquote>
+                    strong: ({children}) => <strong className="font-semibold text-foreground">{children}</strong>,
+em: ({children}) => <em className="italic text-muted-foreground">{children}</em>,
+code: ({children}) => <code className="bg-muted text-foreground px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
+blockquote: ({children}) => <blockquote className="border-l-4 border-border pl-3 italic text-muted-foreground my-2">{children}</blockquote>
                   }}
                                   >
                     {(aiInsight || "Your recovery data is being analyzed. Please check back shortly for personalized insights.").replace(/^Final Answer:\s*/, "")}
@@ -655,10 +655,10 @@ export default function RecoveryPage() {
             <CardDescription>Human-in-the-loop coaching insights</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+            <div className="bg-muted border border-border rounded-lg p-6 text-center">
               <div className="space-y-3">
-                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto">
-                  <RiHeartPulseLine className="h-6 w-6 text-gray-500" />
+                <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mx-auto">
+                  <RiHeartPulseLine className="h-6 w-6 text-muted-foreground" />
                 </div>
                 <h3 className="font-medium">Coach Review Pending</h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
@@ -679,16 +679,16 @@ export default function RecoveryPage() {
             <CardDescription>Coming soon: Plan effectiveness analysis</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+            <div className="bg-accent/10 border border-accent/20 rounded-lg p-6 text-center">
               <div className="space-y-3">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                  <RiArrowUpLine className="h-6 w-6 text-blue-600" />
+                <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center mx-auto">
+                  <RiArrowUpLine className="h-6 w-6 text-accent" />
                 </div>
                 <h3 className="font-medium">Plan vs. Response Analysis</h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
                   In the future, this section will show whether your recovery plan is working — by comparing biometric changes with your activity and plan targets.
                 </p>
-                <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
                   Coming Soon
                 </Badge>
               </div>

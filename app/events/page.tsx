@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const dynamic = 'force-dynamic'
 
@@ -29,7 +30,7 @@ export default async function EventsPage() {
 
   return (
     <div className="p-8 space-y-6">
-      <h1 className="text-2xl font-bold">Upcoming Events</h1>
+      <h1 className="text-2xl font-bold text-foreground">Upcoming Events</h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {(events ?? []).map((evt) => {
@@ -37,43 +38,47 @@ export default async function EventsPage() {
           const isRegistered = !!reg
           const waitlisted = reg?.status === 'waitlisted'
           return (
-            <div key={evt.id} className="rounded-lg border p-4 flex flex-col">
-              <h2 className="text-lg font-semibold mb-1">{evt.title}</h2>
-              <p className="text-sm text-gray-600 mb-2">
-                {new Date(evt.start_time).toLocaleString()} —{' '}
-                {evt.end_time ? new Date(evt.end_time).toLocaleString() : ''}
-              </p>
-              <p className="text-sm flex-1">{evt.description ?? ''}</p>
+            <Card key={evt.id} className="flex flex-col">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">{evt.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  {new Date(evt.start_time).toLocaleString()} —{' '}
+                  {evt.end_time ? new Date(evt.end_time).toLocaleString() : ''}
+                </p>
+                <p className="text-sm text-foreground flex-1">{evt.description ?? ''}</p>
 
-              {isRegistered ? (
-                <form
-                  action={async () => {
-                    'use server'
-                    const { cancelRegistration } = await import('./actions')
-                    await cancelRegistration(evt.id)
-                  }}
-                >
-                  <Button type="submit" variant="secondary" className="rounded-full mt-4">
-                    {waitlisted ? 'Leave wait-list' : 'Cancel RSVP'}
-                  </Button>
-                </form>
-              ) : (
-                <form
-                  action={async () => {
-                    'use server'
-                    const { registerForEvent } = await import('./actions')
-                    await registerForEvent(evt.id)
-                  }}
-                >
-                  <Button type="submit" className="rounded-full mt-4">
-                    RSVP
-                  </Button>
-                </form>
-              )}
-              {waitlisted && (
-                <span className="mt-2 text-xs text-yellow-600">You are on the wait-list</span>
-              )}
-            </div>
+                {isRegistered ? (
+                  <form
+                    action={async () => {
+                      'use server'
+                      const { cancelRegistration } = await import('./actions')
+                      await cancelRegistration(evt.id)
+                    }}
+                  >
+                    <Button type="submit" variant="secondary" className="rounded-full w-full">
+                      {waitlisted ? 'Leave wait-list' : 'Cancel RSVP'}
+                    </Button>
+                  </form>
+                ) : (
+                  <form
+                    action={async () => {
+                      'use server'
+                      const { registerForEvent } = await import('./actions')
+                      await registerForEvent(evt.id)
+                    }}
+                  >
+                    <Button type="submit" className="rounded-full w-full">
+                      RSVP
+                    </Button>
+                  </form>
+                )}
+                {waitlisted && (
+                  <span className="text-xs text-accent font-medium">You are on the wait-list</span>
+                )}
+              </CardContent>
+            </Card>
           )
         })}
       </div>

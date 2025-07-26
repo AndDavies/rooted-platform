@@ -37,9 +37,9 @@ export function TeamSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground gap-3 [&>svg]:size-auto"
+              className="data-[state=open]:bg-emerald-green/10 data-[state=open]:text-emerald-green gap-3 [&>svg]:size-auto"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-md overflow-hidden bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-md overflow-hidden bg-gradient-to-br from-emerald-green to-herbal-olive text-white shadow-sm">
                 {activeTeam && (
                   <img
                     src={activeTeam.logo}
@@ -50,48 +50,48 @@ export function TeamSwitcher({
                 )}
               </div>
               <div className="grid flex-1 text-left text-base leading-tight">
-                <span className="truncate font-medium">
+                <span className="truncate font-medium text-white">
                   {activeTeam?.name ?? "Select a Team"}
                 </span>
                 {activeTeam?.name === "The ROOTED Way" && (
-                  <span className="text-xs text-muted-foreground/80 truncate">
+                  <span className="text-xs text-white/80 truncate">
                     The future of hybrid AI-Human wellness coaching
                   </span>
                 )}
               </div>
               <RiExpandUpDownLine
-                className="ms-auto text-muted-foreground/60"
+                className="ms-auto text-white/60"
                 size={20}
                 aria-hidden="true"
               />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-md"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-md bg-papaya-whip border-emerald-green/20"
             align="start"
             side="bottom"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="uppercase text-muted-foreground/60 text-xs">
+            <DropdownMenuLabel className="uppercase text-misty-sage/60 text-xs">
               Teams
             </DropdownMenuLabel>
             {teams.map((team, index) => (
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
+                className="gap-2 p-2 hover:bg-emerald-green/10 hover:text-emerald-green transition-colors duration-200"
               >
-                <div className="flex size-6 items-center justify-center rounded-md overflow-hidden">
+                <div className="flex size-6 items-center justify-center rounded-md overflow-hidden bg-gradient-to-br from-emerald-green to-herbal-olive">
                   <img src={team.logo} width={36} height={36} alt={team.name} />
                 </div>
-                {team.name}
+                <span className="text-charcoal-ash">{team.name}</span>
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
+            <DropdownMenuSeparator className="bg-emerald-green/20" />
+            <DropdownMenuItem className="gap-2 p-2 hover:bg-emerald-green/10 hover:text-emerald-green transition-colors duration-200">
               <RiAddLine className="opacity-60" size={16} aria-hidden="true" />
-              <div className="font-medium">Add team</div>
+              <div className="font-medium text-charcoal-ash">Add team</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

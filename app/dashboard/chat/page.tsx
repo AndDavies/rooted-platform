@@ -89,7 +89,7 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header - Fixed height */}
-      <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border/60">
+      <header className="flex h-16 shrink-0 items-center gap-2 border-b border-border">
         <div className="flex flex-1 items-center gap-2 px-3">
           <SidebarTrigger className="-ms-4" />
           <Separator
@@ -114,28 +114,42 @@ export default function ChatPage() {
       </header>
 
       {/* Main content area - takes remaining height */}
-      <div className="flex-1 flex flex-col min-h-0 p-4 lg:p-6">
-        {/* Header section - fixed height */}
-        <div className="mb-4 lg:mb-6">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-100 mb-2">Your Smart Recovery Coach</h1>
-          <p className="text-base text-muted-foreground max-w-prose">
+      <div className="flex-1 flex flex-col min-h-0 p-4">
+        {/* Enhanced Header section with Brand Colors */}
+        <div className="mb-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-green via-herbal-olive to-emerald-green flex items-center justify-center shadow-lg border-2 border-emerald-green/20">
+              <RiChatSmile3Line size={20} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-emerald-green to-herbal-olive bg-clip-text text-transparent">
+                Your Smart Recovery Coach
+              </h1>
+              <p className="text-xs text-emerald-green font-medium">Powered by AI Wellness Intelligence</p>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground max-w-prose leading-relaxed">
             Zeger turns your wearable data into clarity. Ask about HRV, sleep, stress, or burnout — and get real insights, not just numbers.
           </p>
         </div>
 
-        {/* Chat Container - takes remaining space */}
-        <div className="flex-1 flex flex-col min-h-0 rounded-xl border border-border/60 border-gray-300/60 shadow-lg shadow-gray-900/5 overflow-hidden">
-          {/* Chat Messages - scrollable area */}
-          <div className="flex-1 min-h-0">
-            <ChatLog messages={messages} />
-          </div>
-          
-          {/* Chat Input - always visible at bottom */}
-          <div className="shrink-0 border-t border-border/40 bg-transparent backdrop-blur-sm">
-            <ChatInput 
-              onSendMessage={handleSendMessage}
-              isLoading={isLoading}
-            />
+        {/* Enhanced Chat Container with Brand Colors */}
+        <div className="flex-1 flex flex-col min-h-0 rounded-xl border-2 border-emerald-green/10 bg-gradient-to-br from-papaya-whip via-cosmic-latte to-papaya-whip shadow-lg overflow-hidden relative">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-green/5 to-herbal-olive/5"></div>
+          <div className="relative z-10 flex flex-col h-full">
+            {/* Chat Messages - scrollable area */}
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <ChatLog messages={messages} />
+            </div>
+            
+            {/* Chat Input - always visible at bottom */}
+            <div className="shrink-0 border-t border-emerald-green/20 bg-gradient-to-br from-papaya-whip to-cosmic-latte">
+              <ChatInput 
+                onSendMessage={handleSendMessage}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
         </div>
       </div>

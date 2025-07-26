@@ -92,7 +92,7 @@ export default async function InsightsPage() {
       </header>
 
       {/* Content */}
-      <div className="flex flex-col gap-6 py-6 lg:py-8">
+      <div className="flex flex-col gap-6 py-6 lg:py-8 px-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold">Personalized Insights</h1>

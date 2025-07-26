@@ -70,13 +70,13 @@ export default function DateNavigation({ currentDate }: DateNavigationProps) {
         variant="outline"
         size="sm"
         onClick={() => handleDateChange('prev')}
-        className="h-8 w-8 p-0"
+        className="h-8 w-8 p-0 border-emerald-green/20 hover:bg-emerald-green/10 hover:text-emerald-green hover:border-emerald-green/40"
       >
         <RiArrowLeftSLine size={16} />
         <span className="sr-only">Previous day</span>
       </Button>
       
-      <div className="text-sm font-medium text-muted-foreground min-w-[100px] text-center">
+      <div className="text-sm font-medium text-misty-sage/80 min-w-[100px] text-center">
         {isToday ? 'Today' : currentDateObj.toLocaleDateString(undefined, { 
           month: 'short', 
           day: 'numeric' 
@@ -88,7 +88,7 @@ export default function DateNavigation({ currentDate }: DateNavigationProps) {
         size="sm"
         onClick={() => handleDateChange('next')}
         disabled={!canGoNext}
-        className="h-8 w-8 p-0"
+        className="h-8 w-8 p-0 border-emerald-green/20 hover:bg-emerald-green/10 hover:text-emerald-green hover:border-emerald-green/40 disabled:opacity-50"
       >
         <RiArrowRightSLine size={16} />
         <span className="sr-only">Next day</span>
@@ -96,7 +96,7 @@ export default function DateNavigation({ currentDate }: DateNavigationProps) {
 
       {!isToday && (
         <Button
-          variant="outline"
+          variant="wellness"
           size="sm"
           onClick={handleTodayClick}
           className="h-8 px-3 ml-2"

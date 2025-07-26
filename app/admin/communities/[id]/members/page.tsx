@@ -46,7 +46,7 @@ export default async function MembersPage({
     <div className="p-8 space-y-6">
       <h1 className="text-2xl font-bold">Members – {community.name}</h1>
       {message && (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
           {message}
         </div>
       )}
@@ -76,16 +76,16 @@ export default async function MembersPage({
         ))}
       </datalist>
 
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50">
+      <table className="min-w-full divide-y divide-border text-sm">
+        <thead className="bg-card">
           <tr>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">User ID</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Role</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Joined</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">User ID</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Role</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Joined</th>
             <th></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-border">
           {(members ?? []).map((m) => (
             <tr key={m.user_id}>
               <td className="px-4 py-2 whitespace-nowrap font-mono text-xs">{m.user_id}</td>
@@ -93,9 +93,9 @@ export default async function MembersPage({
                 <span
                   className={
                     {
-                      member: 'bg-gray-200 text-gray-800',
-                      facilitator: 'bg-blue-200 text-blue-800',
-                      admin: 'bg-green-200 text-green-800',
+                      member: 'bg-muted text-muted-foreground',
+                      facilitator: 'bg-accent text-accent-foreground',
+                      admin: 'bg-primary text-primary-foreground',
                     }[m.role as 'member' | 'facilitator' | 'admin'] +
                     ' rounded px-2 py-0.5 text-xs font-medium'
                   }
@@ -131,7 +131,7 @@ export default async function MembersPage({
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="rounded-full px-3 text-xs text-red-600 border-red-300"
+                    className="rounded-full px-3 text-xs text-destructive border-destructive/30"
                     type="submit"
                   >
                     Delete
@@ -143,7 +143,7 @@ export default async function MembersPage({
         </tbody>
       </table>
 
-      <a href="/admin/communities" className="text-blue-600 underline text-sm">
+      <a href="/admin/communities" className="text-primary underline text-sm">
         ← Back to Communities
       </a>
     </div>

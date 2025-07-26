@@ -131,18 +131,18 @@ export default async function EventsAdminPage() {
         </Button>
       </form>
 
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50">
+      <table className="min-w-full divide-y divide-border text-sm">
+        <thead className="bg-card">
           <tr>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Title</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Start</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">End</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Host</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Capacity</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Title</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Start</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">End</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Host</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Capacity</th>
             <th></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-border">
           {events?.map((evt) => (
             <tr key={evt.id}>
               <td className="px-4 py-2 whitespace-nowrap">{evt.title}</td>
@@ -154,7 +154,7 @@ export default async function EventsAdminPage() {
               <td className="px-4 py-2 whitespace-nowrap">{evt.capacity ?? '—'}</td>
               <td className="px-4 py-2">
                 <details>
-                  <summary className="cursor-pointer text-blue-600">Edit</summary>
+                  <summary className="cursor-pointer text-primary">Edit</summary>
                   <form action={async (formData) => {
                     'use server'
                     const { updateEvent } = await import('./actions')
@@ -167,7 +167,7 @@ export default async function EventsAdminPage() {
                     <input type="number" name="capacity" defaultValue={evt.capacity ?? ''} placeholder="Capacity" className="rounded-md border px-2 py-1" />
                     <input name="host" defaultValue={evt.host ?? ''} placeholder="Host" className="rounded-md border px-2 py-1" />
                     <textarea name="details" defaultValue={typeof evt.details === 'string' ? evt.details : ''} className="rounded-md border px-2 py-1" />
-                    <button className="rounded-md bg-gray-900 px-3 py-1 text-white text-xs w-fit" type="submit">Save</button>
+                    <button className="rounded-md bg-primary px-3 py-1 text-primary-foreground text-xs w-fit" type="submit">Save</button>
                   </form>
                   <form action={async (formData) => {
                     'use server'
@@ -175,7 +175,7 @@ export default async function EventsAdminPage() {
                     await deleteEventAction(formData)
                   }}>
                     <input type="hidden" name="id" value={evt.id} />
-                    <button className="mt-2 text-xs text-red-600" type="submit">Delete</button>
+                    <button className="mt-2 text-xs text-destructive" type="submit">Delete</button>
                   </form>
                 </details>
               </td>

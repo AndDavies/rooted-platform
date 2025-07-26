@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, KeyboardEvent } from 'react'
-import { Input } from '@/components/ui/input'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Mic, Send } from 'lucide-react'
+import { Send, Loader2 } from 'lucide-react'
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void
@@ -12,83 +11,71 @@ interface ChatInputProps {
 
 export default function ChatInput({ onSendMessage, isLoading = false }: ChatInputProps) {
   const [message, setMessage] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const handleSubmit = () => {
-    const trimmedMessage = message.trim()
-    if (trimmedMessage && !isLoading) {
-      onSendMessage(trimmedMessage)
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }, [message])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (message.trim() && !isLoading) {
+      onSendMessage(message.trim())
       setMessage('')
+      // Reset textarea height
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto'
+      }
     }
   }
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      handleSubmit()
+      handleSubmit(e)
     }
-  }
-
-  const handleMicClick = () => {
-    // TODO: Implement voice input functionality
-    console.log('Voice input not yet implemented')
   }
 
   return (
-    <div className="p-5">
-      <div className="flex items-center gap-2 border-gray-300/60 rounded-full border border-white shadow-sm hover:shadow-md hover:border-gray-400/60 transition-all duration-200 p-3">
-        {/* Message Input */}
-        <Input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Ask anything…"
-          disabled={isLoading}
-          className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-500 text-gray-100 font-medium"
-        />
-        
-        {/* Action Buttons */}
-        <div className="flex items-center gap-1">
-          {/* Microphone Button */}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleMicClick}
+    <form onSubmit={handleSubmit} className="p-4">
+      <div className="flex items-end gap-4">
+        <div className="flex-1 relative">
+          <textarea
+            ref={textareaRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask Zeger about your wellness data..."
+            className="w-full resize-none rounded-2xl border-2 border-emerald-green/20 bg-gradient-to-br from-papaya-whip via-cosmic-latte to-papaya-whip text-charcoal-ash placeholder-dusky-plum/60 px-4 py-3 pr-12 focus:border-emerald-green/40 focus:outline-none focus:ring-2 focus:ring-emerald-green/20 transition-all duration-300 min-h-[44px] max-h-32 shadow-lg hover:shadow-xl"
             disabled={isLoading}
-            className="h-9 w-9 rounded-xl hover:bg-gray-200/60 transition-all duration-200 hover:scale-105"
-          >
-            <Mic className="h-4 w-4 text-gray-600" />
-            <span className="sr-only">Voice input</span>
-          </Button>
-          
-          {/* Send Button */}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleSubmit}
-            disabled={!message.trim() || isLoading}
-            className={`h-9 w-9 rounded-xl transition-all duration-200 hover:scale-105 ${
-              message.trim() && !isLoading
-                ? 'hover:bg-primary/15 text-primary shadow-sm hover:shadow-md'
-                : 'hover:bg-gray-200/60 text-gray-500'
-            } disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100`}
-          >
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Send message</span>
-          </Button>
-        </div>
-      </div>
-      
-      {/* Enhanced Loading indicator */}
-      {isLoading && (
-        <div className="flex items-center justify-center mt-4">
-          <div className="flex items-center gap-3 text-sm text-gray-700 bg-gray-50/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-300/60 shadow-sm">
-            <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary/30 border-t-primary"></div>
-            <span className="font-medium">Zeger is thinking...</span>
+            rows={1}
+          />
+          <div className="absolute right-3 bottom-3 text-xs text-dusky-plum/40 font-medium">
+            {message.length}/4000
           </div>
         </div>
-      )}
-    </div>
+        
+        <Button
+          onClick={handleSubmit}
+          disabled={!message.trim() || isLoading}
+          size="icon"
+          className="h-11 w-11 rounded-full bg-gradient-to-br from-emerald-green via-herbal-olive to-emerald-green hover:from-emerald-green/90 hover:via-herbal-olive/90 hover:to-emerald-green/90 text-white shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed border-2 border-emerald-green/20"
+        >
+                      {isLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Send className="h-5 w-5" />
+            )}
+        </Button>
+      </div>
+      
+      <div className="mt-3 text-xs text-dusky-plum/60 text-center font-medium">
+        Press Enter to send, Shift+Enter for new line
+      </div>
+    </form>
   )
 } 

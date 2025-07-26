@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   ]
   return (
     <div className="grid min-h-screen grid-cols-[200px_1fr]">
-      <aside className="border-r border-gray-200 bg-gray-50 p-6">
+      <aside className="border-r border-sidebar-border bg-sidebar p-6">
         <h2 className="mb-6 text-xl font-bold">Admin</h2>
         <nav className="space-y-2">
           {nav.map((n) => (
@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               key={n.href}
               href={n.href}
               className={`block rounded-md px-3 py-2 text-sm font-medium ${
-                pathname === n.href ? 'bg-gray-900 text-white' : 'text-gray-700 hover:bg-gray-100'
+                pathname === n.href ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'
               }`}
             >
               {n.label}

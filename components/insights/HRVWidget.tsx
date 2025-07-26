@@ -134,7 +134,7 @@ export default async function HRVWidget() {
             {todayHRVValue && (
               <div className="mt-1">
                 {todayHRVValue > sevenDayAverage ? (
-                  <span className="text-xs text-green-600 font-medium">
+                  <span className="text-xs text-emerald-green font-medium">
                     +{(todayHRVValue - sevenDayAverage).toFixed(0)} ms above average
                   </span>
                 ) : todayHRVValue < sevenDayAverage ? (

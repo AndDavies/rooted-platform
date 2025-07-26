@@ -10,13 +10,25 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+          "border-transparent bg-emerald-green text-white [a&]:hover:bg-emerald-green/90",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+          "border-transparent bg-misty-sage text-white [a&]:hover:bg-misty-sage/90",
+        wellness:
+          "border-transparent bg-maximum-yellow text-charcoal-ash [a&]:hover:bg-maximum-yellow/90",
+        recovery:
+          "border-transparent bg-herbal-olive text-white [a&]:hover:bg-herbal-olive/90",
+        stress:
+          "border-transparent bg-warm-clay text-white [a&]:hover:bg-warm-clay/90",
         destructive:
-          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "border-transparent bg-dark-pastel-red text-white [a&]:hover:bg-dark-pastel-red/90 focus-visible:ring-dark-pastel-red/20 dark:focus-visible:ring-dark-pastel-red/40",
         outline:
-          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+          "text-foreground border-emerald-green [a&]:hover:bg-emerald-green/10 [a&]:hover:text-emerald-green",
+        success:
+          "border-transparent bg-emerald-green/10 text-emerald-green border-emerald-green/20",
+        warning:
+          "border-transparent bg-maximum-yellow/10 text-charcoal-ash border-maximum-yellow/20",
+        info:
+          "border-transparent bg-misty-sage/10 text-dusky-plum border-misty-sage/20",
       },
     },
     defaultVariants: {

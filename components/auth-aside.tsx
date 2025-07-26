@@ -1,49 +1,55 @@
-import { Leaf, Check } from "lucide-react"
+import { Check } from "lucide-react"
 
 export function AuthAside() {
   return (
-    <div className="relative hidden lg:flex flex-col items-center justify-center overflow-hidden bg-gradient-to-tr from-neutral-900 via-neutral-800 to-neutral-700 text-white p-10">
-      {/* Background texture & overlay */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Optional subtle texture image; fallback to solid colour if image unavailable */}
-        <img
-          src="/leaf-texture.jpg"
-          alt=""
-          className="h-full w-full object-cover opacity-20"
-        />
+    <div className="relative hidden lg:block">
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-green via-herbal-olive to-emerald-green text-white p-10">
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      </div>
-
-      {/* Foreground content */}
-      <div className="relative z-10 max-w-md text-center space-y-6">
-        <div className="inline-flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-white text-neutral-900">
-            <Leaf className="h-5 w-5" />
+        <div className="relative z-10 flex h-full flex-col justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-white text-charcoal-ash">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5Z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-bold">The ROOTED Way</span>
+              <p className="text-sm text-misty-sage/80 font-normal">The future of hybrid AI-Human wellness coaching</p>
+            </div>
           </div>
-          <div className="text-left">
-            <h2 className="text-3xl font-bold tracking-tight">The ROOTED Way</h2>
-            <p className="text-sm text-gray-300/80 font-normal">The future of hybrid AI-Human wellness coaching</p>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-lg font-light text-misty-sage">
+                Transform your wellness journey with AI-powered insights
+              </h2>
+              <ul className="space-y-2 text-left text-misty-sage/90 text-sm md:text-base">
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 mt-0.5 shrink-0 text-herbal-olive" />
+                  Personalized recovery recommendations
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 mt-0.5 shrink-0 text-herbal-olive" />
+                  Real-time biometric analysis
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="h-4 w-4 mt-0.5 shrink-0 text-herbal-olive" />
+                  Community-driven wellness support
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-
-        <p className="text-lg font-light text-gray-300">
-          A community space to cultivate wellness, leadership & connection.
-        </p>
-
-        <ul className="space-y-2 text-left text-gray-300/90 text-sm md:text-base">
-          <li className="flex items-start gap-2">
-            <Check className="h-4 w-4 mt-0.5 shrink-0 text-green-400" />
-            Track your biometrics & progress
-          </li>
-          <li className="flex items-start gap-2">
-            <Check className="h-4 w-4 mt-0.5 shrink-0 text-green-400" />
-            Join live events & retreats
-          </li>
-          <li className="flex items-start gap-2">
-            <Check className="h-4 w-4 mt-0.5 shrink-0 text-green-400" />
-            Receive personalised insights
-          </li>
-        </ul>
       </div>
     </div>
   )

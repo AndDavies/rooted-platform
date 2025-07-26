@@ -35,15 +35,15 @@ export default async function CommunitiesPage() {
         </Button>
       </form>
 
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50">
+      <table className="min-w-full divide-y divide-border text-sm">
+        <thead className="bg-card">
           <tr>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Name</th>
-            <th className="px-4 py-2 text-left font-semibold text-gray-700">Members</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Name</th>
+            <th className="px-4 py-2 text-left font-semibold text-muted-foreground">Members</th>
             <th></th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-border">
           {(communities ?? []).map((c) => {
             const memberCount = c.community_members?.[0]?.count ?? 0
             return (
@@ -52,7 +52,7 @@ export default async function CommunitiesPage() {
                 <td className="px-4 py-2 whitespace-nowrap">{memberCount}</td>
                 <td className="px-4 py-2 space-x-3 whitespace-nowrap">
                   <details className="inline-block">
-                    <summary className="cursor-pointer text-blue-600 text-xs">Edit</summary>
+                    <summary className="cursor-pointer text-primary text-xs">Edit</summary>
                     <form
                       action={async (formData) => {
                         'use server'
@@ -70,7 +70,7 @@ export default async function CommunitiesPage() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        className="mt-1 text-xs rounded-full px-3 text-red-600 border-red-300"
+                        className="mt-1 text-xs rounded-full px-3 text-destructive border-destructive/30"
                         type="submit"
                       >
                         Delete
@@ -80,7 +80,7 @@ export default async function CommunitiesPage() {
 
                   <a
                     href={`/admin/communities/${c.id}/members`}
-                    className="text-blue-600 text-xs underline"
+                    className="text-primary underline text-sm"
                   >
                     Members
                   </a>

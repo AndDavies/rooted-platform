@@ -92,9 +92,9 @@ function LineChart({ data, className = "", color = "primary" }: { data: number[]
 
   const colorClasses = {
     primary: "stroke-primary",
-    orange: "stroke-orange-500", 
-    red: "stroke-red-500",
-    green: "stroke-green-500"
+    orange: "stroke-maximum-yellow", 
+    red: "stroke-dark-pastel-red",
+    green: "stroke-emerald-green"
   }
 
   return (
@@ -184,11 +184,11 @@ function TrendChart({ data, className = "", title, unit, yAxisLabel }: { data: n
           </span>
           <div className="flex items-center gap-1">
             {isGoodTrend ? (
-              <RiArrowUpLine className="h-3 w-3 text-green-500" />
+              <RiArrowUpLine className="h-3 w-3 text-emerald-green" />
             ) : (
-              <RiArrowDownLine className="h-3 w-3 text-red-500" />
+              <RiArrowDownLine className="h-3 w-3 text-dark-pastel-red" />
             )}
-            <span className={`text-xs ${isGoodTrend ? 'text-green-600' : 'text-red-600'}`}>
+            <span className={`text-xs ${isGoodTrend ? 'text-emerald-green' : 'text-dark-pastel-red'}`}>
               {Math.abs(((current - first) / first) * 100).toFixed(1)}%
             </span>
           </div>
@@ -295,7 +295,7 @@ function TrendChart({ data, className = "", title, unit, yAxisLabel }: { data: n
                 cy={point.y}
                 r="3"
                 fill="currentColor"
-                className={isGoodTrend ? "text-green-500" : "text-red-500"}
+                className={isGoodTrend ? "text-emerald-green" : "text-dark-pastel-red"}
                 stroke="white"
                 strokeWidth="1"
               />
@@ -307,7 +307,7 @@ function TrendChart({ data, className = "", title, unit, yAxisLabel }: { data: n
               cy={points[0].y}
               r="4"
               fill="currentColor"
-              className="text-blue-500"
+              className="text-accent"
               stroke="white"
               strokeWidth="2"
             />
@@ -316,7 +316,7 @@ function TrendChart({ data, className = "", title, unit, yAxisLabel }: { data: n
               cy={points[points.length - 1].y}
               r="4"
               fill="currentColor"
-              className={isGoodTrend ? "text-green-600" : "text-red-600"}
+              className={isGoodTrend ? "text-emerald-green" : "text-dark-pastel-red"}
               stroke="white"
               strokeWidth="2"
             />
@@ -376,7 +376,7 @@ function ProgressRing({ value, className = "" }: { value: number; className?: st
         </defs>
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-bold text-gray-900">{value}%</span>
+        <span className="text-2xl font-bold text-foreground">{value}%</span>
       </div>
     </div>
   )
@@ -385,10 +385,10 @@ function ProgressRing({ value, className = "" }: { value: number; className?: st
 function RadarChart({ data, className = "" }: { data: any; className?: string }) {
   return (
     <div className={`h-64 w-64 relative ${className}`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 rounded-full flex items-center justify-center">
-        <div className="w-48 h-48 border-2 border-blue-200 rounded-full relative">
-          <div className="absolute inset-4 border border-blue-100 rounded-full">
-            <div className="absolute inset-4 border border-blue-50 rounded-full">
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-accent/5 rounded-full flex items-center justify-center">
+        <div className="w-48 h-48 border-2 border-accent/20 rounded-full relative">
+          <div className="absolute inset-4 border border-accent/15 rounded-full">
+            <div className="absolute inset-4 border border-accent/10 rounded-full">
               {/* Data points */}
               {Object.entries(data).map(([key, value], index) => {
                 const angle = (index * 60) * (Math.PI / 180)
@@ -399,7 +399,7 @@ function RadarChart({ data, className = "" }: { data: any; className?: string })
                 return (
                   <div
                     key={key}
-                    className="absolute w-2 h-2 bg-blue-500 rounded-full transform -translate-x-1 -translate-y-1"
+                    className="absolute w-2 h-2 bg-accent rounded-full transform -translate-x-1 -translate-y-1"
                     style={{
                       left: `calc(50% + ${x}px)`,
                       top: `calc(50% + ${y}px)`
@@ -422,7 +422,7 @@ function RadarChart({ data, className = "" }: { data: any; className?: string })
             return (
               <div
                 key={key}
-                className="absolute text-xs font-medium text-gray-600 transform -translate-x-1/2 -translate-y-1/2"
+                className="absolute text-xs font-medium text-muted-foreground transform -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `calc(50% + ${x}px)`,
                   top: `calc(50% + ${y}px)`
@@ -454,31 +454,31 @@ function BurnoutMetricCard({
   status?: 'good' | 'warning' | 'critical'
 }) {
   const statusColors = {
-    good: 'text-green-600 bg-green-50 border-green-200',
-    warning: 'text-orange-600 bg-orange-50 border-orange-200',
-    critical: 'text-red-600 bg-red-50 border-red-200'
+    good: 'text-emerald-green bg-emerald-green/10 border-emerald-green/20',
+    warning: 'text-maximum-yellow bg-maximum-yellow/10 border-maximum-yellow/20',
+    critical: 'text-dark-pastel-red bg-dark-pastel-red/10 border-dark-pastel-red/20'
   }
 
   return (
-    <Card className="bg-card border shadow-sm">
+    <Card className="bg-gradient-to-br from-papaya-whip to-cosmic-latte border-emerald-green/20 shadow-sm">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-          <Icon className="h-4 w-4 text-primary" />
+          <CardTitle className="text-sm font-medium text-dusky-plum">{title}</CardTitle>
+          <Icon className="h-4 w-4 text-emerald-green" />
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold text-foreground mb-2">
+        <div className="text-2xl font-bold text-charcoal-ash mb-2">
           {value}{unit}
         </div>
         {trend !== undefined && (
           <div className="flex items-center gap-1">
             {trend > 0 ? (
-              <RiArrowUpLine className="h-3 w-3 text-red-500" />
+              <RiArrowUpLine className="h-3 w-3 text-dark-pastel-red" />
             ) : (
-              <RiArrowDownLine className="h-3 w-3 text-green-500" />
+              <RiArrowDownLine className="h-3 w-3 text-emerald-green" />
             )}
-            <span className={`text-xs ${trend > 0 ? 'text-red-600' : 'text-green-600'}`}>
+            <span className={`text-xs ${trend > 0 ? 'text-dark-pastel-red' : 'text-emerald-green'}`}>
               {Math.abs(trend)}%
             </span>
           </div>
@@ -506,21 +506,21 @@ function RecoveryPrompt({
 }) {
   return (
     <div className={`flex items-start gap-3 p-4 rounded-lg border transition-all hover:shadow-md ${
-      completed ? 'bg-green-50 border-green-200' : 'bg-card border-border hover:border-primary/50'
+      completed ? 'bg-emerald-green/10 border-emerald-green/20' : 'bg-card border-border hover:border-primary/50'
     }`}>
       <div className="text-2xl">{icon}</div>
       <div className="flex-1">
-        <h4 className={`font-medium ${completed ? 'text-green-800 line-through' : 'text-foreground'}`}>
+        <h4 className={`font-medium ${completed ? 'text-emerald-green line-through' : 'text-foreground'}`}>
           {title}
         </h4>
-        <p className={`text-sm ${completed ? 'text-green-600' : 'text-muted-foreground'}`}>
+        <p className={`text-sm ${completed ? 'text-emerald-green' : 'text-muted-foreground'}`}>
           {description}
         </p>
       </div>
       <Button
         variant={completed ? "outline" : "default"}
         size="sm"
-        className={completed ? "text-green-600 border-green-300" : ""}
+        className={completed ? "text-emerald-green border-emerald-green/30" : ""}
       >
         {completed ? '✓ Done' : 'Start'}
       </Button>
@@ -567,15 +567,15 @@ export default function BurnoutMVPPage() {
         
         {/* Connection Indicators */}
         <div className="flex items-center gap-3 px-3">
-          <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full" />
+          <div className="flex items-center gap-2 bg-emerald-green/10 border border-emerald-green/20 rounded-lg px-3 py-2">
+            <div className="w-2 h-2 bg-emerald-green rounded-full" />
             <img src="/whoop-logo.png" alt="Whoop" className="h-6 w-auto" />
-            <span className="text-xs font-medium text-green-700">Connected</span>
+            <span className="text-xs font-medium text-emerald-green">Connected</span>
           </div>
-          <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full" />
+          <div className="flex items-center gap-2 bg-emerald-green/10 border border-emerald-green/20 rounded-lg px-3 py-2">
+            <div className="w-2 h-2 bg-emerald-green rounded-full" />
             <img src="/garmin-logo.png" alt="Garmin" className="h-6 w-auto" />
-            <span className="text-xs font-medium text-green-700">Connected</span>
+            <span className="text-xs font-medium text-emerald-green">Connected</span>
           </div>
         </div>
       </header>
@@ -607,7 +607,7 @@ export default function BurnoutMVPPage() {
                   </CardTitle>
                   <CardDescription>Your burnout risk is moderate and rising slightly</CardDescription>
                 </div>
-                <Badge variant="outline" className="bg-orange-50 text-orange-800 border-orange-300 text-lg px-4 py-2">
+                <Badge variant="outline" className="bg-maximum-yellow/10 text-maximum-yellow border-maximum-yellow/20 text-lg px-4 py-2">
                   🟡 Moderate
                 </Badge>
               </div>
@@ -624,8 +624,8 @@ export default function BurnoutMVPPage() {
                   <LineChart data={burnoutData.burnoutHistory} className="h-12" color="orange" />
                 </div>
               </div>
-              <div className="mt-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                <p className="text-sm text-orange-800">
+              <div className="mt-4 p-3 bg-maximum-yellow/10 rounded-lg border border-maximum-yellow/20">
+                <p className="text-sm text-maximum-yellow">
                   <strong>Alert:</strong> Your score increased from 5 to 6 this week. Time to prioritize recovery.
                 </p>
               </div>
@@ -648,11 +648,11 @@ export default function BurnoutMVPPage() {
                   <div className="text-sm text-muted-foreground">Current Streak</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600">{burnoutData.breathworkStreak.targetStreak}</div>
+                  <div className="text-3xl font-bold text-emerald-green">{burnoutData.breathworkStreak.targetStreak}</div>
                   <div className="text-sm text-muted-foreground">Target</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-orange-500">{burnoutData.breathworkStreak.targetStreak - burnoutData.breathworkStreak.currentStreak}</div>
+                  <div className="text-3xl font-bold text-maximum-yellow">{burnoutData.breathworkStreak.targetStreak - burnoutData.breathworkStreak.currentStreak}</div>
                   <div className="text-sm text-muted-foreground">Days Left</div>
                 </div>
               </div>
@@ -672,10 +672,10 @@ export default function BurnoutMVPPage() {
                         <div 
                           className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
                             completed 
-                              ? 'bg-green-500 border-green-500 text-white' 
+                              ? 'bg-emerald-green border-emerald-green text-white' 
                               : isToday 
-                                ? 'border-orange-500 bg-orange-50 text-orange-600' 
-                                : 'border-gray-300 bg-gray-50 text-gray-400'
+                                ? 'border-maximum-yellow bg-maximum-yellow/10 text-maximum-yellow' 
+                                : 'border-border bg-muted text-muted-foreground'
                           }`}
                         >
                           {completed ? (
@@ -692,8 +692,8 @@ export default function BurnoutMVPPage() {
                 </div>
                 
                 {/* Progress message */}
-                <div className="text-center mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <p className="text-sm text-blue-800 font-medium">
+                <div className="text-center mt-4 p-3 bg-accent/10 rounded-lg border border-accent/20">
+                  <p className="text-sm text-accent font-medium">
                     {burnoutData.breathworkStreak.currentStreak === 0 
                       ? "Start your streak today! 🫁" 
                       : `Great work! ${burnoutData.breathworkStreak.targetStreak - burnoutData.breathworkStreak.currentStreak} more days to complete your challenge! 🔥`
@@ -716,10 +716,10 @@ export default function BurnoutMVPPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-lg font-bold">HRV (RMSSD)</CardTitle>
-                  <CardDescription className="text-red-600">Strained - Normal range: 20-80 ms</CardDescription>
+                  <CardDescription className="text-dark-pastel-red">Strained - Normal range: 20-80 ms</CardDescription>
                 </div>
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-red-500">44 ms</div>
+                  <div className="text-2xl font-bold text-dark-pastel-red">44 ms</div>
                   <div className="text-sm text-muted-foreground">Current</div>
                 </div>
               </div>
@@ -739,8 +739,8 @@ export default function BurnoutMVPPage() {
                   <rect x="0" y="0" width="100%" height="120" fill="transparent" stroke="currentColor" strokeWidth="1" className="text-border opacity-30" rx="4"/>
                   
                   {/* Y-axis reference line at 50ms */}
-                  <line x1="0" y1="60" x2="100%" y2="60" stroke="currentColor" strokeWidth="1" className="text-green-500 opacity-30" strokeDasharray="4,4"/>
-                  <text x="10" y="55" className="text-xs fill-green-600 font-medium">50 ms</text>
+                  <line x1="0" y1="60" x2="100%" y2="60" stroke="currentColor" strokeWidth="1" className="text-emerald-green opacity-30" strokeDasharray="4,4"/>
+                  <text x="10" y="55" className="text-xs fill-emerald-green font-medium">50 ms</text>
                   
                   {/* Data points and line */}
                   {burnoutData.dailyHRVReadings.map((reading, index) => {
@@ -750,7 +750,7 @@ export default function BurnoutMVPPage() {
                     const nextX = 60 + ((index + 1) * 80)
                     const nextY = nextReading ? 120 - ((nextReading.value - 30) / 30 * 80) : y
                     
-                    const dotColor = reading.status === 'good' ? 'text-green-500' : reading.status === 'moderate' ? 'text-yellow-500' : 'text-red-500'
+                    const dotColor = reading.status === 'good' ? 'text-emerald-green' : reading.status === 'moderate' ? 'text-maximum-yellow' : 'text-dark-pastel-red'
                     
                     return (
                       <g key={index}>
@@ -763,7 +763,7 @@ export default function BurnoutMVPPage() {
                             y2={nextY} 
                             stroke="currentColor" 
                             strokeWidth="2" 
-                            className="text-gray-400"
+                            className="text-muted-foreground"
                           />
                         )}
                         
@@ -1047,8 +1047,8 @@ export default function BurnoutMVPPage() {
                 ))}
               </div>
             </div>
-            <div className="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
-              <p className="text-sm text-orange-800">
+            <div className="mt-6 p-4 bg-maximum-yellow/10 rounded-lg border border-maximum-yellow/20">
+              <p className="text-sm text-maximum-yellow">
                 <strong>Key Focus Areas:</strong> Your stress levels (6.9/10) and movement (3.5/10) need immediate attention. 
                 These are your highest-impact areas for reducing burnout risk.
               </p>
