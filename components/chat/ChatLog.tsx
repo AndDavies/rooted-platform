@@ -21,8 +21,8 @@ export default function ChatLog({ messages }: ChatLogProps) {
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 min-h-0 overflow-y-auto p-4">
-        <div className="text-center py-4 px-4 max-w-xl mx-auto">
+      <div className="flex flex-col flex-1 min-h-0 overflow-y-auto p-4">
+        <div className="text-center py-4 px-4 max-w-xl mx-auto my-auto">
           {/* Enhanced Bot Avatar with Subtle Animation */}
           <div className="relative mb-6">
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-green via-herbal-olive to-emerald-green flex items-center justify-center mx-auto shadow-xl border-4 border-white/20 relative overflow-hidden">

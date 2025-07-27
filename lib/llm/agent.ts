@@ -44,7 +44,7 @@ export async function createRecoveryAgent(userId?: string) {
     console.log(`[Agent] Creating recovery agent for user: ${userId || 'anonymous'}`)
 
     const model = new ChatOpenAI({
-      model: "gpt-4o",
+      model: "gpt-4.1-mini",
       temperature: 0.1, // Very low temperature for consistent behavior and to prevent loops
       streaming: false,
       openAIApiKey: process.env.OPENAI_API_KEY,
